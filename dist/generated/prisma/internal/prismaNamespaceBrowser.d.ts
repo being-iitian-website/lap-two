@@ -44,6 +44,7 @@ export declare const ModelName: {
     readonly User_info: "User_info";
     readonly Target: "Target";
     readonly Revision: "Revision";
+    readonly FocusSession: "FocusSession";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -94,6 +95,16 @@ export declare const RevisionScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type RevisionScalarFieldEnum = (typeof RevisionScalarFieldEnum)[keyof typeof RevisionScalarFieldEnum];
+export declare const FocusSessionScalarFieldEnum: {
+    readonly id: "id";
+    readonly notes: "notes";
+    readonly startTime: "startTime";
+    readonly endTime: "endTime";
+    readonly duration: "duration";
+    readonly userId: "userId";
+    readonly createdAt: "createdAt";
+};
+export type FocusSessionScalarFieldEnum = (typeof FocusSessionScalarFieldEnum)[keyof typeof FocusSessionScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";

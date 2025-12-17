@@ -54,6 +54,7 @@ model User_info {
 
   targets   Target[]
   revisions  Revision[] 
+  focusSessions  FocusSession[]
 }
 
 
@@ -99,4 +100,18 @@ model Revision {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+
+model FocusSession {
+  id        String   @id @default(uuid())
+  notes     String?
+  startTime DateTime
+  endTime   DateTime
+  duration  Int      // duration in minutes (calculated in backend)
+
+  userId String
+  user   User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }

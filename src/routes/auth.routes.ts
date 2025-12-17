@@ -1,14 +1,20 @@
 import { Router } from "express";
 
-import { login, register } from "../controllers/auth.controller";
+import { login, register, logout } from "../controllers/auth.controller";
 
 const router = Router();
+
+// Simple health/test route
 router.get("/test", (_req, res) => {
-    console.log("HIT /api/auth/test");
-    res.send("auth test ok");
-  });
+  // eslint-disable-next-line no-console
+  console.log("HIT /api/auth/test");
+  res.send("auth test ok");
+});
 
 router.post("/register", register);
 router.post("/login", login);
+
+// Stateless logout endpoint
+router.post("/logout", logout);
 
 export default router;

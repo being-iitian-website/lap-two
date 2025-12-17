@@ -256,6 +256,7 @@ export declare const ModelName: {
     readonly User_info: "User_info";
     readonly Target: "Target";
     readonly Revision: "Revision";
+    readonly FocusSession: "FocusSession";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export interface TypeMapCb<GlobalOmitOptions = {}> extends runtime.Types.Utils.Fn<{
@@ -268,7 +269,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user_info" | "target" | "revision";
+        modelProps: "user_info" | "target" | "revision" | "focusSession";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -494,6 +495,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        FocusSession: {
+            payload: Prisma.$FocusSessionPayload<ExtArgs>;
+            fields: Prisma.FocusSessionFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.FocusSessionFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.FocusSessionFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload>;
+                };
+                findFirst: {
+                    args: Prisma.FocusSessionFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.FocusSessionFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload>;
+                };
+                findMany: {
+                    args: Prisma.FocusSessionFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload>[];
+                };
+                create: {
+                    args: Prisma.FocusSessionCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload>;
+                };
+                createMany: {
+                    args: Prisma.FocusSessionCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.FocusSessionCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload>[];
+                };
+                delete: {
+                    args: Prisma.FocusSessionDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload>;
+                };
+                update: {
+                    args: Prisma.FocusSessionUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.FocusSessionDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.FocusSessionUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.FocusSessionUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload>[];
+                };
+                upsert: {
+                    args: Prisma.FocusSessionUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FocusSessionPayload>;
+                };
+                aggregate: {
+                    args: Prisma.FocusSessionAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateFocusSession>;
+                };
+                groupBy: {
+                    args: Prisma.FocusSessionGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.FocusSessionGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.FocusSessionCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.FocusSessionCountAggregateOutputType> | number;
+                };
+            };
+        };
     };
 } & {
     other: {
@@ -569,6 +644,16 @@ export declare const RevisionScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type RevisionScalarFieldEnum = (typeof RevisionScalarFieldEnum)[keyof typeof RevisionScalarFieldEnum];
+export declare const FocusSessionScalarFieldEnum: {
+    readonly id: "id";
+    readonly notes: "notes";
+    readonly startTime: "startTime";
+    readonly endTime: "endTime";
+    readonly duration: "duration";
+    readonly userId: "userId";
+    readonly createdAt: "createdAt";
+};
+export type FocusSessionScalarFieldEnum = (typeof FocusSessionScalarFieldEnum)[keyof typeof FocusSessionScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";
@@ -742,6 +827,7 @@ export type GlobalOmitConfig = {
     user_info?: Prisma.User_infoOmit;
     target?: Prisma.TargetOmit;
     revision?: Prisma.RevisionOmit;
+    focusSession?: Prisma.FocusSessionOmit;
 };
 export type LogLevel = 'info' | 'query' | 'warn' | 'error';
 export type LogDefinition = {

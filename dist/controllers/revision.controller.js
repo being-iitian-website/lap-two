@@ -59,8 +59,10 @@ const createRevision = async (req, res) => {
         if (isNaN(date.getTime())) {
             return res.status(400).json({ message: "Invalid date format for revisionDate" });
         }
-        // Set time to start of day for consistent comparison
-        date.setHours(0, 0, 0, 0);
+        // Attach the current local time to the provided date so that
+        // both the chosen date and the creation time are stored.
+        const now = new Date();
+        date.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
         const revision = await prismaconfig_1.default.revision.create({
             data: {
                 subject,

@@ -69,6 +69,36 @@ All Target Management APIs require JWT authentication. Follow these steps to tes
 
 ---
 
+## Step 2.1: Logout (Stateless)
+
+> Note: With JWT-based stateless auth, **logout is handled on the client** by deleting the stored token (e.g. from localStorage, cookies, or Postman environment).  
+> This endpoint is mainly for frontend/Postman flows and future extensibility (e.g. token blacklist).
+
+### Request
+- **Method**: `POST`
+- **URL**: `http://localhost:5000/api/auth/logout`
+- **Headers**:
+  ```
+  Authorization: Bearer YOUR_JWT_TOKEN_HERE
+  ```
+
+### Expected Response (200 OK)
+```json
+{
+  "message": "Logged out successfully. Please remove the token on the client."
+}
+```
+
+### What you should do after this response
+- In **frontend**: remove the JWT from storage (localStorage / cookie / memory).
+- In **Postman**: clear or unset the `jwt_token` environment variable.
+
+### Test Cases:
+1. **Valid Request**: Should return 200 with logout message.
+2. **Missing Token**: Remove Authorization header → Should return 401 if you later protect this route; currently it's open, but you should still treat it as a signal to clear the token client-side.
+
+---
+
 ## Step 3: Create a Target
 
 ### Request

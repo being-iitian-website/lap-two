@@ -11,6 +11,7 @@ const cors_1 = __importDefault(require("cors"));
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const target_routes_1 = __importDefault(require("./routes/target.routes"));
 const revision_routes_1 = __importDefault(require("./routes/revision.routes"));
+const focus_routes_1 = __importDefault(require("./routes/focus.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 exports.app = app;
@@ -29,6 +30,7 @@ app.get("/", (_req, res) => {
 app.use("/api/auth", auth_routes_1.default);
 app.use("/api/targets", target_routes_1.default);
 app.use("/api/revisions", revision_routes_1.default);
+app.use("/api/focus", focus_routes_1.default);
 const server = app.listen(port, () => {
     // eslint-disable-next-line no-console
     console.log(`Server started successfully on port ${port}`);

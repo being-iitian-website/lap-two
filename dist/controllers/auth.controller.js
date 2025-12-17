@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.register = void 0;
+exports.logout = exports.login = exports.register = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const prismaconfig_1 = __importDefault(require("../config/prismaconfig"));
 const jwt_1 = require("../utils/jwt");
@@ -81,4 +81,19 @@ const login = async (req, res) => {
     }
 };
 exports.login = login;
+/**
+ * LOGOUT
+ *
+ * For stateless JWT auth, logout is handled on the client
+ * by removing the stored token. This endpoint exists mainly
+ * for frontend/Postman flows and future extensibility (e.g. blacklist).
+ */
+const logout = async (_req, res) => {
+    // If you later add token blacklist/refresh-token invalidation,
+    // you can implement it here using information from the Authorization header.
+    return res.json({
+        message: "Logged out successfully. Please remove the token on the client.",
+    });
+};
+exports.logout = logout;
 //# sourceMappingURL=auth.controller.js.map

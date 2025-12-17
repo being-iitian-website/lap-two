@@ -6,6 +6,7 @@ import cors from "cors";
 import authRouter from "./routes/auth.routes";
 import targetRoutes from "./routes/target.routes";
 import revisionRoutes from "./routes/revision.routes";
+import focusRoutes from "./routes/focus.routes";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.get("/", (_req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/targets", targetRoutes);
 app.use("/api/revisions", revisionRoutes);
+app.use("/api/focus", focusRoutes);
 
 const server = app.listen(port, () => {
   // eslint-disable-next-line no-console

@@ -17,4 +17,9 @@ export type Target = Prisma.TargetModel;
  *
  */
 export type Revision = Prisma.RevisionModel;
+/**
+ * Model FocusSession
+ *
+ */
+export type FocusSession = Prisma.FocusSessionModel;
 //# sourceMappingURL=browser.d.ts.map

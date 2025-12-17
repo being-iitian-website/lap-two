@@ -144,6 +144,17 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get revision(): Prisma.RevisionDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    /**
+     * `prisma.focusSession`: Exposes CRUD operations for the **FocusSession** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more FocusSessions
+      * const focusSessions = await prisma.focusSession.findMany()
+      * ```
+      */
+    get focusSession(): Prisma.FocusSessionDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
 }
 export declare function getPrismaClientClass(dirname: string): PrismaClientConstructor;
 //# sourceMappingURL=class.d.ts.map

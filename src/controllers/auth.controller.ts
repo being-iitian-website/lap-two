@@ -105,3 +105,22 @@ export const login = async (
     return res.status(500).json({ message: "Login failed" });
   }
 };
+
+/**
+ * LOGOUT
+ *
+ * For stateless JWT auth, logout is handled on the client
+ * by removing the stored token. This endpoint exists mainly
+ * for frontend/Postman flows and future extensibility (e.g. blacklist).
+ */
+export const logout = async (
+  _req: Request,
+  res: Response
+): Promise<Response | void> => {
+  // If you later add token blacklist/refresh-token invalidation,
+  // you can implement it here using information from the Authorization header.
+
+  return res.json({
+    message: "Logged out successfully. Please remove the token on the client.",
+  });
+};

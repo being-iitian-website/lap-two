@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.RevisionScalarFieldEnum = exports.TargetScalarFieldEnum = exports.User_infoScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.FocusSessionScalarFieldEnum = exports.RevisionScalarFieldEnum = exports.TargetScalarFieldEnum = exports.User_infoScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -77,7 +77,8 @@ exports.AnyNull = runtime.objectEnumValues.instances.AnyNull;
 exports.ModelName = {
     User_info: 'User_info',
     Target: 'Target',
-    Revision: 'Revision'
+    Revision: 'Revision',
+    FocusSession: 'FocusSession'
 };
 /*
  * Enums
@@ -125,6 +126,15 @@ exports.RevisionScalarFieldEnum = {
     userId: 'userId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
+};
+exports.FocusSessionScalarFieldEnum = {
+    id: 'id',
+    notes: 'notes',
+    startTime: 'startTime',
+    endTime: 'endTime',
+    duration: 'duration',
+    userId: 'userId',
+    createdAt: 'createdAt'
 };
 exports.SortOrder = {
     asc: 'asc',
