@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.FocusSessionScalarFieldEnum = exports.RevisionScalarFieldEnum = exports.TargetScalarFieldEnum = exports.User_infoScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.JournalScalarFieldEnum = exports.FocusSessionScalarFieldEnum = exports.RevisionScalarFieldEnum = exports.TargetScalarFieldEnum = exports.User_infoScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -78,7 +78,8 @@ exports.ModelName = {
     User_info: 'User_info',
     Target: 'Target',
     Revision: 'Revision',
-    FocusSession: 'FocusSession'
+    FocusSession: 'FocusSession',
+    Journal: 'Journal'
 };
 /*
  * Enums
@@ -110,6 +111,11 @@ exports.TargetScalarFieldEnum = {
     endTime: 'endTime',
     carryForward: 'carryForward',
     status: 'status',
+    dailyQuestion1: 'dailyQuestion1',
+    dailyAnswer1: 'dailyAnswer1',
+    dailyQuestion2: 'dailyQuestion2',
+    dailyAnswer2: 'dailyAnswer2',
+    responseDate: 'responseDate',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     userId: 'userId'
@@ -135,6 +141,15 @@ exports.FocusSessionScalarFieldEnum = {
     duration: 'duration',
     userId: 'userId',
     createdAt: 'createdAt'
+};
+exports.JournalScalarFieldEnum = {
+    id: 'id',
+    date: 'date',
+    notes: 'notes',
+    userId: 'userId',
+    targetId: 'targetId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
 };
 exports.SortOrder = {
     asc: 'asc',

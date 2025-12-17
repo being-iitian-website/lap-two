@@ -55,6 +55,7 @@ model User_info {
   targets   Target[]
   revisions  Revision[] 
   focusSessions  FocusSession[]
+  journals       Journal[]
 }
 
 
@@ -71,6 +72,11 @@ model Target {
   endTime       DateTime?
   carryForward  Boolean       @default(false)
   status        TargetStatus  @default(pending)
+  dailyQuestion1 String?
+  dailyAnswer1   String?
+  dailyQuestion2 String?
+  dailyAnswer2   String?
+  responseDate   DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -78,6 +84,7 @@ model Target {
   user   User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   revisions Revision[] 
+  journals       Journal[]
 }
 
 
@@ -114,4 +121,20 @@ model FocusSession {
   user   User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+}
+
+
+model Journal {
+  id        String   @id @default(uuid())
+  date      DateTime
+  notes     String
+
+  userId String
+  user   User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  targetId String?
+  target   Target? @relation(fields: [targetId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

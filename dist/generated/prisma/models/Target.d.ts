@@ -36,6 +36,11 @@ export type TargetMinAggregateOutputType = {
     endTime: Date | null;
     carryForward: boolean | null;
     status: $Enums.TargetStatus | null;
+    dailyQuestion1: string | null;
+    dailyAnswer1: string | null;
+    dailyQuestion2: string | null;
+    dailyAnswer2: string | null;
+    responseDate: Date | null;
     createdAt: Date | null;
     updatedAt: Date | null;
     userId: string | null;
@@ -53,6 +58,11 @@ export type TargetMaxAggregateOutputType = {
     endTime: Date | null;
     carryForward: boolean | null;
     status: $Enums.TargetStatus | null;
+    dailyQuestion1: string | null;
+    dailyAnswer1: string | null;
+    dailyQuestion2: string | null;
+    dailyAnswer2: string | null;
+    responseDate: Date | null;
     createdAt: Date | null;
     updatedAt: Date | null;
     userId: string | null;
@@ -70,6 +80,11 @@ export type TargetCountAggregateOutputType = {
     endTime: number;
     carryForward: number;
     status: number;
+    dailyQuestion1: number;
+    dailyAnswer1: number;
+    dailyQuestion2: number;
+    dailyAnswer2: number;
+    responseDate: number;
     createdAt: number;
     updatedAt: number;
     userId: number;
@@ -98,6 +113,11 @@ export type TargetMinAggregateInputType = {
     endTime?: true;
     carryForward?: true;
     status?: true;
+    dailyQuestion1?: true;
+    dailyAnswer1?: true;
+    dailyQuestion2?: true;
+    dailyAnswer2?: true;
+    responseDate?: true;
     createdAt?: true;
     updatedAt?: true;
     userId?: true;
@@ -115,6 +135,11 @@ export type TargetMaxAggregateInputType = {
     endTime?: true;
     carryForward?: true;
     status?: true;
+    dailyQuestion1?: true;
+    dailyAnswer1?: true;
+    dailyQuestion2?: true;
+    dailyAnswer2?: true;
+    responseDate?: true;
     createdAt?: true;
     updatedAt?: true;
     userId?: true;
@@ -132,6 +157,11 @@ export type TargetCountAggregateInputType = {
     endTime?: true;
     carryForward?: true;
     status?: true;
+    dailyQuestion1?: true;
+    dailyAnswer1?: true;
+    dailyQuestion2?: true;
+    dailyAnswer2?: true;
+    responseDate?: true;
     createdAt?: true;
     updatedAt?: true;
     userId?: true;
@@ -226,6 +256,11 @@ export type TargetGroupByOutputType = {
     endTime: Date | null;
     carryForward: boolean;
     status: $Enums.TargetStatus;
+    dailyQuestion1: string | null;
+    dailyAnswer1: string | null;
+    dailyQuestion2: string | null;
+    dailyAnswer2: string | null;
+    responseDate: Date | null;
     createdAt: Date;
     updatedAt: Date;
     userId: string;
@@ -254,11 +289,17 @@ export type TargetWhereInput = {
     endTime?: Prisma.DateTimeNullableFilter<"Target"> | Date | string | null;
     carryForward?: Prisma.BoolFilter<"Target"> | boolean;
     status?: Prisma.EnumTargetStatusFilter<"Target"> | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.StringNullableFilter<"Target"> | string | null;
+    dailyAnswer1?: Prisma.StringNullableFilter<"Target"> | string | null;
+    dailyQuestion2?: Prisma.StringNullableFilter<"Target"> | string | null;
+    dailyAnswer2?: Prisma.StringNullableFilter<"Target"> | string | null;
+    responseDate?: Prisma.DateTimeNullableFilter<"Target"> | Date | string | null;
     createdAt?: Prisma.DateTimeFilter<"Target"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Target"> | Date | string;
     userId?: Prisma.StringFilter<"Target"> | string;
     user?: Prisma.XOR<Prisma.User_infoScalarRelationFilter, Prisma.User_infoWhereInput>;
     revisions?: Prisma.RevisionListRelationFilter;
+    journals?: Prisma.JournalListRelationFilter;
 };
 export type TargetOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -273,11 +314,17 @@ export type TargetOrderByWithRelationInput = {
     endTime?: Prisma.SortOrderInput | Prisma.SortOrder;
     carryForward?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    dailyQuestion1?: Prisma.SortOrderInput | Prisma.SortOrder;
+    dailyAnswer1?: Prisma.SortOrderInput | Prisma.SortOrder;
+    dailyQuestion2?: Prisma.SortOrderInput | Prisma.SortOrder;
+    dailyAnswer2?: Prisma.SortOrderInput | Prisma.SortOrder;
+    responseDate?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     user?: Prisma.User_infoOrderByWithRelationInput;
     revisions?: Prisma.RevisionOrderByRelationAggregateInput;
+    journals?: Prisma.JournalOrderByRelationAggregateInput;
 };
 export type TargetWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -295,11 +342,17 @@ export type TargetWhereUniqueInput = Prisma.AtLeast<{
     endTime?: Prisma.DateTimeNullableFilter<"Target"> | Date | string | null;
     carryForward?: Prisma.BoolFilter<"Target"> | boolean;
     status?: Prisma.EnumTargetStatusFilter<"Target"> | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.StringNullableFilter<"Target"> | string | null;
+    dailyAnswer1?: Prisma.StringNullableFilter<"Target"> | string | null;
+    dailyQuestion2?: Prisma.StringNullableFilter<"Target"> | string | null;
+    dailyAnswer2?: Prisma.StringNullableFilter<"Target"> | string | null;
+    responseDate?: Prisma.DateTimeNullableFilter<"Target"> | Date | string | null;
     createdAt?: Prisma.DateTimeFilter<"Target"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Target"> | Date | string;
     userId?: Prisma.StringFilter<"Target"> | string;
     user?: Prisma.XOR<Prisma.User_infoScalarRelationFilter, Prisma.User_infoWhereInput>;
     revisions?: Prisma.RevisionListRelationFilter;
+    journals?: Prisma.JournalListRelationFilter;
 }, "id">;
 export type TargetOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -314,6 +367,11 @@ export type TargetOrderByWithAggregationInput = {
     endTime?: Prisma.SortOrderInput | Prisma.SortOrder;
     carryForward?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    dailyQuestion1?: Prisma.SortOrderInput | Prisma.SortOrder;
+    dailyAnswer1?: Prisma.SortOrderInput | Prisma.SortOrder;
+    dailyQuestion2?: Prisma.SortOrderInput | Prisma.SortOrder;
+    dailyAnswer2?: Prisma.SortOrderInput | Prisma.SortOrder;
+    responseDate?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
@@ -339,6 +397,11 @@ export type TargetScalarWhereWithAggregatesInput = {
     endTime?: Prisma.DateTimeNullableWithAggregatesFilter<"Target"> | Date | string | null;
     carryForward?: Prisma.BoolWithAggregatesFilter<"Target"> | boolean;
     status?: Prisma.EnumTargetStatusWithAggregatesFilter<"Target"> | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.StringNullableWithAggregatesFilter<"Target"> | string | null;
+    dailyAnswer1?: Prisma.StringNullableWithAggregatesFilter<"Target"> | string | null;
+    dailyQuestion2?: Prisma.StringNullableWithAggregatesFilter<"Target"> | string | null;
+    dailyAnswer2?: Prisma.StringNullableWithAggregatesFilter<"Target"> | string | null;
+    responseDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Target"> | Date | string | null;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"Target"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Target"> | Date | string;
     userId?: Prisma.StringWithAggregatesFilter<"Target"> | string;
@@ -356,10 +419,16 @@ export type TargetCreateInput = {
     endTime?: Date | string | null;
     carryForward?: boolean;
     status?: $Enums.TargetStatus;
+    dailyQuestion1?: string | null;
+    dailyAnswer1?: string | null;
+    dailyQuestion2?: string | null;
+    dailyAnswer2?: string | null;
+    responseDate?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     user: Prisma.User_infoCreateNestedOneWithoutTargetsInput;
     revisions?: Prisma.RevisionCreateNestedManyWithoutTargetInput;
+    journals?: Prisma.JournalCreateNestedManyWithoutTargetInput;
 };
 export type TargetUncheckedCreateInput = {
     id?: string;
@@ -374,10 +443,16 @@ export type TargetUncheckedCreateInput = {
     endTime?: Date | string | null;
     carryForward?: boolean;
     status?: $Enums.TargetStatus;
+    dailyQuestion1?: string | null;
+    dailyAnswer1?: string | null;
+    dailyQuestion2?: string | null;
+    dailyAnswer2?: string | null;
+    responseDate?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     userId: string;
     revisions?: Prisma.RevisionUncheckedCreateNestedManyWithoutTargetInput;
+    journals?: Prisma.JournalUncheckedCreateNestedManyWithoutTargetInput;
 };
 export type TargetUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -392,10 +467,16 @@ export type TargetUpdateInput = {
     endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.User_infoUpdateOneRequiredWithoutTargetsNestedInput;
     revisions?: Prisma.RevisionUpdateManyWithoutTargetNestedInput;
+    journals?: Prisma.JournalUpdateManyWithoutTargetNestedInput;
 };
 export type TargetUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -410,10 +491,16 @@ export type TargetUncheckedUpdateInput = {
     endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
     revisions?: Prisma.RevisionUncheckedUpdateManyWithoutTargetNestedInput;
+    journals?: Prisma.JournalUncheckedUpdateManyWithoutTargetNestedInput;
 };
 export type TargetCreateManyInput = {
     id?: string;
@@ -428,6 +515,11 @@ export type TargetCreateManyInput = {
     endTime?: Date | string | null;
     carryForward?: boolean;
     status?: $Enums.TargetStatus;
+    dailyQuestion1?: string | null;
+    dailyAnswer1?: string | null;
+    dailyQuestion2?: string | null;
+    dailyAnswer2?: string | null;
+    responseDate?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     userId: string;
@@ -445,6 +537,11 @@ export type TargetUpdateManyMutationInput = {
     endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -461,6 +558,11 @@ export type TargetUncheckedUpdateManyInput = {
     endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -486,6 +588,11 @@ export type TargetCountOrderByAggregateInput = {
     endTime?: Prisma.SortOrder;
     carryForward?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    dailyQuestion1?: Prisma.SortOrder;
+    dailyAnswer1?: Prisma.SortOrder;
+    dailyQuestion2?: Prisma.SortOrder;
+    dailyAnswer2?: Prisma.SortOrder;
+    responseDate?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
@@ -508,6 +615,11 @@ export type TargetMaxOrderByAggregateInput = {
     endTime?: Prisma.SortOrder;
     carryForward?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    dailyQuestion1?: Prisma.SortOrder;
+    dailyAnswer1?: Prisma.SortOrder;
+    dailyQuestion2?: Prisma.SortOrder;
+    dailyAnswer2?: Prisma.SortOrder;
+    responseDate?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
@@ -525,6 +637,11 @@ export type TargetMinOrderByAggregateInput = {
     endTime?: Prisma.SortOrder;
     carryForward?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    dailyQuestion1?: Prisma.SortOrder;
+    dailyAnswer1?: Prisma.SortOrder;
+    dailyQuestion2?: Prisma.SortOrder;
+    dailyAnswer2?: Prisma.SortOrder;
+    responseDate?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
@@ -616,6 +733,20 @@ export type TargetUpdateOneWithoutRevisionsNestedInput = {
     connect?: Prisma.TargetWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.TargetUpdateToOneWithWhereWithoutRevisionsInput, Prisma.TargetUpdateWithoutRevisionsInput>, Prisma.TargetUncheckedUpdateWithoutRevisionsInput>;
 };
+export type TargetCreateNestedOneWithoutJournalsInput = {
+    create?: Prisma.XOR<Prisma.TargetCreateWithoutJournalsInput, Prisma.TargetUncheckedCreateWithoutJournalsInput>;
+    connectOrCreate?: Prisma.TargetCreateOrConnectWithoutJournalsInput;
+    connect?: Prisma.TargetWhereUniqueInput;
+};
+export type TargetUpdateOneWithoutJournalsNestedInput = {
+    create?: Prisma.XOR<Prisma.TargetCreateWithoutJournalsInput, Prisma.TargetUncheckedCreateWithoutJournalsInput>;
+    connectOrCreate?: Prisma.TargetCreateOrConnectWithoutJournalsInput;
+    upsert?: Prisma.TargetUpsertWithoutJournalsInput;
+    disconnect?: Prisma.TargetWhereInput | boolean;
+    delete?: Prisma.TargetWhereInput | boolean;
+    connect?: Prisma.TargetWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.TargetUpdateToOneWithWhereWithoutJournalsInput, Prisma.TargetUpdateWithoutJournalsInput>, Prisma.TargetUncheckedUpdateWithoutJournalsInput>;
+};
 export type TargetCreateWithoutUserInput = {
     id?: string;
     field: string;
@@ -629,9 +760,15 @@ export type TargetCreateWithoutUserInput = {
     endTime?: Date | string | null;
     carryForward?: boolean;
     status?: $Enums.TargetStatus;
+    dailyQuestion1?: string | null;
+    dailyAnswer1?: string | null;
+    dailyQuestion2?: string | null;
+    dailyAnswer2?: string | null;
+    responseDate?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     revisions?: Prisma.RevisionCreateNestedManyWithoutTargetInput;
+    journals?: Prisma.JournalCreateNestedManyWithoutTargetInput;
 };
 export type TargetUncheckedCreateWithoutUserInput = {
     id?: string;
@@ -646,9 +783,15 @@ export type TargetUncheckedCreateWithoutUserInput = {
     endTime?: Date | string | null;
     carryForward?: boolean;
     status?: $Enums.TargetStatus;
+    dailyQuestion1?: string | null;
+    dailyAnswer1?: string | null;
+    dailyQuestion2?: string | null;
+    dailyAnswer2?: string | null;
+    responseDate?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     revisions?: Prisma.RevisionUncheckedCreateNestedManyWithoutTargetInput;
+    journals?: Prisma.JournalUncheckedCreateNestedManyWithoutTargetInput;
 };
 export type TargetCreateOrConnectWithoutUserInput = {
     where: Prisma.TargetWhereUniqueInput;
@@ -687,6 +830,11 @@ export type TargetScalarWhereInput = {
     endTime?: Prisma.DateTimeNullableFilter<"Target"> | Date | string | null;
     carryForward?: Prisma.BoolFilter<"Target"> | boolean;
     status?: Prisma.EnumTargetStatusFilter<"Target"> | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.StringNullableFilter<"Target"> | string | null;
+    dailyAnswer1?: Prisma.StringNullableFilter<"Target"> | string | null;
+    dailyQuestion2?: Prisma.StringNullableFilter<"Target"> | string | null;
+    dailyAnswer2?: Prisma.StringNullableFilter<"Target"> | string | null;
+    responseDate?: Prisma.DateTimeNullableFilter<"Target"> | Date | string | null;
     createdAt?: Prisma.DateTimeFilter<"Target"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Target"> | Date | string;
     userId?: Prisma.StringFilter<"Target"> | string;
@@ -704,9 +852,15 @@ export type TargetCreateWithoutRevisionsInput = {
     endTime?: Date | string | null;
     carryForward?: boolean;
     status?: $Enums.TargetStatus;
+    dailyQuestion1?: string | null;
+    dailyAnswer1?: string | null;
+    dailyQuestion2?: string | null;
+    dailyAnswer2?: string | null;
+    responseDate?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     user: Prisma.User_infoCreateNestedOneWithoutTargetsInput;
+    journals?: Prisma.JournalCreateNestedManyWithoutTargetInput;
 };
 export type TargetUncheckedCreateWithoutRevisionsInput = {
     id?: string;
@@ -721,9 +875,15 @@ export type TargetUncheckedCreateWithoutRevisionsInput = {
     endTime?: Date | string | null;
     carryForward?: boolean;
     status?: $Enums.TargetStatus;
+    dailyQuestion1?: string | null;
+    dailyAnswer1?: string | null;
+    dailyQuestion2?: string | null;
+    dailyAnswer2?: string | null;
+    responseDate?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     userId: string;
+    journals?: Prisma.JournalUncheckedCreateNestedManyWithoutTargetInput;
 };
 export type TargetCreateOrConnectWithoutRevisionsInput = {
     where: Prisma.TargetWhereUniqueInput;
@@ -751,9 +911,15 @@ export type TargetUpdateWithoutRevisionsInput = {
     endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.User_infoUpdateOneRequiredWithoutTargetsNestedInput;
+    journals?: Prisma.JournalUpdateManyWithoutTargetNestedInput;
 };
 export type TargetUncheckedUpdateWithoutRevisionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -768,9 +934,120 @@ export type TargetUncheckedUpdateWithoutRevisionsInput = {
     endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    journals?: Prisma.JournalUncheckedUpdateManyWithoutTargetNestedInput;
+};
+export type TargetCreateWithoutJournalsInput = {
+    id?: string;
+    field: string;
+    subject: string;
+    title: string;
+    type: $Enums.TargetType;
+    plannedHours?: number | null;
+    actualHours?: number | null;
+    questions?: number | null;
+    startTime?: Date | string | null;
+    endTime?: Date | string | null;
+    carryForward?: boolean;
+    status?: $Enums.TargetStatus;
+    dailyQuestion1?: string | null;
+    dailyAnswer1?: string | null;
+    dailyQuestion2?: string | null;
+    dailyAnswer2?: string | null;
+    responseDate?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    user: Prisma.User_infoCreateNestedOneWithoutTargetsInput;
+    revisions?: Prisma.RevisionCreateNestedManyWithoutTargetInput;
+};
+export type TargetUncheckedCreateWithoutJournalsInput = {
+    id?: string;
+    field: string;
+    subject: string;
+    title: string;
+    type: $Enums.TargetType;
+    plannedHours?: number | null;
+    actualHours?: number | null;
+    questions?: number | null;
+    startTime?: Date | string | null;
+    endTime?: Date | string | null;
+    carryForward?: boolean;
+    status?: $Enums.TargetStatus;
+    dailyQuestion1?: string | null;
+    dailyAnswer1?: string | null;
+    dailyQuestion2?: string | null;
+    dailyAnswer2?: string | null;
+    responseDate?: Date | string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    userId: string;
+    revisions?: Prisma.RevisionUncheckedCreateNestedManyWithoutTargetInput;
+};
+export type TargetCreateOrConnectWithoutJournalsInput = {
+    where: Prisma.TargetWhereUniqueInput;
+    create: Prisma.XOR<Prisma.TargetCreateWithoutJournalsInput, Prisma.TargetUncheckedCreateWithoutJournalsInput>;
+};
+export type TargetUpsertWithoutJournalsInput = {
+    update: Prisma.XOR<Prisma.TargetUpdateWithoutJournalsInput, Prisma.TargetUncheckedUpdateWithoutJournalsInput>;
+    create: Prisma.XOR<Prisma.TargetCreateWithoutJournalsInput, Prisma.TargetUncheckedCreateWithoutJournalsInput>;
+    where?: Prisma.TargetWhereInput;
+};
+export type TargetUpdateToOneWithWhereWithoutJournalsInput = {
+    where?: Prisma.TargetWhereInput;
+    data: Prisma.XOR<Prisma.TargetUpdateWithoutJournalsInput, Prisma.TargetUncheckedUpdateWithoutJournalsInput>;
+};
+export type TargetUpdateWithoutJournalsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    field?: Prisma.StringFieldUpdateOperationsInput | string;
+    subject?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType;
+    plannedHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    questions?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    user?: Prisma.User_infoUpdateOneRequiredWithoutTargetsNestedInput;
+    revisions?: Prisma.RevisionUpdateManyWithoutTargetNestedInput;
+};
+export type TargetUncheckedUpdateWithoutJournalsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    field?: Prisma.StringFieldUpdateOperationsInput | string;
+    subject?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType;
+    plannedHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    actualHours?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+    questions?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    revisions?: Prisma.RevisionUncheckedUpdateManyWithoutTargetNestedInput;
 };
 export type TargetCreateManyUserInput = {
     id?: string;
@@ -785,6 +1062,11 @@ export type TargetCreateManyUserInput = {
     endTime?: Date | string | null;
     carryForward?: boolean;
     status?: $Enums.TargetStatus;
+    dailyQuestion1?: string | null;
+    dailyAnswer1?: string | null;
+    dailyQuestion2?: string | null;
+    dailyAnswer2?: string | null;
+    responseDate?: Date | string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -801,9 +1083,15 @@ export type TargetUpdateWithoutUserInput = {
     endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     revisions?: Prisma.RevisionUpdateManyWithoutTargetNestedInput;
+    journals?: Prisma.JournalUpdateManyWithoutTargetNestedInput;
 };
 export type TargetUncheckedUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -818,9 +1106,15 @@ export type TargetUncheckedUpdateWithoutUserInput = {
     endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     revisions?: Prisma.RevisionUncheckedUpdateManyWithoutTargetNestedInput;
+    journals?: Prisma.JournalUncheckedUpdateManyWithoutTargetNestedInput;
 };
 export type TargetUncheckedUpdateManyWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -835,6 +1129,11 @@ export type TargetUncheckedUpdateManyWithoutUserInput = {
     endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     carryForward?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     status?: Prisma.EnumTargetStatusFieldUpdateOperationsInput | $Enums.TargetStatus;
+    dailyQuestion1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyQuestion2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    dailyAnswer2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    responseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -843,9 +1142,11 @@ export type TargetUncheckedUpdateManyWithoutUserInput = {
  */
 export type TargetCountOutputType = {
     revisions: number;
+    journals: number;
 };
 export type TargetCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     revisions?: boolean | TargetCountOutputTypeCountRevisionsArgs;
+    journals?: boolean | TargetCountOutputTypeCountJournalsArgs;
 };
 /**
  * TargetCountOutputType without action
@@ -862,6 +1163,12 @@ export type TargetCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
 export type TargetCountOutputTypeCountRevisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.RevisionWhereInput;
 };
+/**
+ * TargetCountOutputType without action
+ */
+export type TargetCountOutputTypeCountJournalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.JournalWhereInput;
+};
 export type TargetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     field?: boolean;
@@ -875,11 +1182,17 @@ export type TargetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     endTime?: boolean;
     carryForward?: boolean;
     status?: boolean;
+    dailyQuestion1?: boolean;
+    dailyAnswer1?: boolean;
+    dailyQuestion2?: boolean;
+    dailyAnswer2?: boolean;
+    responseDate?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     userId?: boolean;
     user?: boolean | Prisma.User_infoDefaultArgs<ExtArgs>;
     revisions?: boolean | Prisma.Target$revisionsArgs<ExtArgs>;
+    journals?: boolean | Prisma.Target$journalsArgs<ExtArgs>;
     _count?: boolean | Prisma.TargetCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["target"]>;
 export type TargetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -895,6 +1208,11 @@ export type TargetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
     endTime?: boolean;
     carryForward?: boolean;
     status?: boolean;
+    dailyQuestion1?: boolean;
+    dailyAnswer1?: boolean;
+    dailyQuestion2?: boolean;
+    dailyAnswer2?: boolean;
+    responseDate?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     userId?: boolean;
@@ -913,6 +1231,11 @@ export type TargetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
     endTime?: boolean;
     carryForward?: boolean;
     status?: boolean;
+    dailyQuestion1?: boolean;
+    dailyAnswer1?: boolean;
+    dailyQuestion2?: boolean;
+    dailyAnswer2?: boolean;
+    responseDate?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     userId?: boolean;
@@ -931,14 +1254,20 @@ export type TargetSelectScalar = {
     endTime?: boolean;
     carryForward?: boolean;
     status?: boolean;
+    dailyQuestion1?: boolean;
+    dailyAnswer1?: boolean;
+    dailyQuestion2?: boolean;
+    dailyAnswer2?: boolean;
+    responseDate?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     userId?: boolean;
 };
-export type TargetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "field" | "subject" | "title" | "type" | "plannedHours" | "actualHours" | "questions" | "startTime" | "endTime" | "carryForward" | "status" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["target"]>;
+export type TargetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "field" | "subject" | "title" | "type" | "plannedHours" | "actualHours" | "questions" | "startTime" | "endTime" | "carryForward" | "status" | "dailyQuestion1" | "dailyAnswer1" | "dailyQuestion2" | "dailyAnswer2" | "responseDate" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["target"]>;
 export type TargetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     user?: boolean | Prisma.User_infoDefaultArgs<ExtArgs>;
     revisions?: boolean | Prisma.Target$revisionsArgs<ExtArgs>;
+    journals?: boolean | Prisma.Target$journalsArgs<ExtArgs>;
     _count?: boolean | Prisma.TargetCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type TargetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -952,6 +1281,7 @@ export type $TargetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     objects: {
         user: Prisma.$User_infoPayload<ExtArgs>;
         revisions: Prisma.$RevisionPayload<ExtArgs>[];
+        journals: Prisma.$JournalPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -966,6 +1296,11 @@ export type $TargetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
         endTime: Date | null;
         carryForward: boolean;
         status: $Enums.TargetStatus;
+        dailyQuestion1: string | null;
+        dailyAnswer1: string | null;
+        dailyQuestion2: string | null;
+        dailyAnswer2: string | null;
+        responseDate: Date | null;
         createdAt: Date;
         updatedAt: Date;
         userId: string;
@@ -1300,6 +1635,7 @@ export interface Prisma__TargetClient<T, Null = never, ExtArgs extends runtime.T
     readonly [Symbol.toStringTag]: "PrismaPromise";
     user<T extends Prisma.User_infoDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User_infoDefaultArgs<ExtArgs>>): Prisma.Prisma__User_infoClient<runtime.Types.Result.GetResult<Prisma.$User_infoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     revisions<T extends Prisma.Target$revisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Target$revisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    journals<T extends Prisma.Target$journalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Target$journalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1337,6 +1673,11 @@ export interface TargetFieldRefs {
     readonly endTime: Prisma.FieldRef<"Target", 'DateTime'>;
     readonly carryForward: Prisma.FieldRef<"Target", 'Boolean'>;
     readonly status: Prisma.FieldRef<"Target", 'TargetStatus'>;
+    readonly dailyQuestion1: Prisma.FieldRef<"Target", 'String'>;
+    readonly dailyAnswer1: Prisma.FieldRef<"Target", 'String'>;
+    readonly dailyQuestion2: Prisma.FieldRef<"Target", 'String'>;
+    readonly dailyAnswer2: Prisma.FieldRef<"Target", 'String'>;
+    readonly responseDate: Prisma.FieldRef<"Target", 'DateTime'>;
     readonly createdAt: Prisma.FieldRef<"Target", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"Target", 'DateTime'>;
     readonly userId: Prisma.FieldRef<"Target", 'String'>;
@@ -1740,6 +2081,29 @@ export type Target$revisionsArgs<ExtArgs extends runtime.Types.Extensions.Intern
     take?: number;
     skip?: number;
     distinct?: Prisma.RevisionScalarFieldEnum | Prisma.RevisionScalarFieldEnum[];
+};
+/**
+ * Target.journals
+ */
+export type Target$journalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Journal
+     */
+    select?: Prisma.JournalSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Journal
+     */
+    omit?: Prisma.JournalOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.JournalInclude<ExtArgs> | null;
+    where?: Prisma.JournalWhereInput;
+    orderBy?: Prisma.JournalOrderByWithRelationInput | Prisma.JournalOrderByWithRelationInput[];
+    cursor?: Prisma.JournalWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.JournalScalarFieldEnum | Prisma.JournalScalarFieldEnum[];
 };
 /**
  * Target without action

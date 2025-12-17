@@ -257,6 +257,7 @@ export declare const ModelName: {
     readonly Target: "Target";
     readonly Revision: "Revision";
     readonly FocusSession: "FocusSession";
+    readonly Journal: "Journal";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export interface TypeMapCb<GlobalOmitOptions = {}> extends runtime.Types.Utils.Fn<{
@@ -269,7 +270,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user_info" | "target" | "revision" | "focusSession";
+        modelProps: "user_info" | "target" | "revision" | "focusSession" | "journal";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -569,6 +570,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        Journal: {
+            payload: Prisma.$JournalPayload<ExtArgs>;
+            fields: Prisma.JournalFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.JournalFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.JournalFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload>;
+                };
+                findFirst: {
+                    args: Prisma.JournalFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.JournalFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload>;
+                };
+                findMany: {
+                    args: Prisma.JournalFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload>[];
+                };
+                create: {
+                    args: Prisma.JournalCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload>;
+                };
+                createMany: {
+                    args: Prisma.JournalCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.JournalCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload>[];
+                };
+                delete: {
+                    args: Prisma.JournalDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload>;
+                };
+                update: {
+                    args: Prisma.JournalUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.JournalDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.JournalUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.JournalUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload>[];
+                };
+                upsert: {
+                    args: Prisma.JournalUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$JournalPayload>;
+                };
+                aggregate: {
+                    args: Prisma.JournalAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateJournal>;
+                };
+                groupBy: {
+                    args: Prisma.JournalGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.JournalGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.JournalCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.JournalCountAggregateOutputType> | number;
+                };
+            };
+        };
     };
 } & {
     other: {
@@ -625,6 +700,11 @@ export declare const TargetScalarFieldEnum: {
     readonly endTime: "endTime";
     readonly carryForward: "carryForward";
     readonly status: "status";
+    readonly dailyQuestion1: "dailyQuestion1";
+    readonly dailyAnswer1: "dailyAnswer1";
+    readonly dailyQuestion2: "dailyQuestion2";
+    readonly dailyAnswer2: "dailyAnswer2";
+    readonly responseDate: "responseDate";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
     readonly userId: "userId";
@@ -654,6 +734,16 @@ export declare const FocusSessionScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type FocusSessionScalarFieldEnum = (typeof FocusSessionScalarFieldEnum)[keyof typeof FocusSessionScalarFieldEnum];
+export declare const JournalScalarFieldEnum: {
+    readonly id: "id";
+    readonly date: "date";
+    readonly notes: "notes";
+    readonly userId: "userId";
+    readonly targetId: "targetId";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type JournalScalarFieldEnum = (typeof JournalScalarFieldEnum)[keyof typeof JournalScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";
@@ -828,6 +918,7 @@ export type GlobalOmitConfig = {
     target?: Prisma.TargetOmit;
     revision?: Prisma.RevisionOmit;
     focusSession?: Prisma.FocusSessionOmit;
+    journal?: Prisma.JournalOmit;
 };
 export type LogLevel = 'info' | 'query' | 'warn' | 'error';
 export type LogDefinition = {

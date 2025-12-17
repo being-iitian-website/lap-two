@@ -7,6 +7,7 @@ import {
   updateTargetStatus,
   carryForwardTarget,
   deleteTarget,
+  submitDailyResponse,
 } from "../controllers/target.controllers";
 
 const router = Router();
@@ -25,6 +26,9 @@ router.patch("/:id/status", updateTargetStatus);
 
 // Carry forward a missed target
 router.post("/:id/carry-forward", carryForwardTarget);
+
+// Submit daily response for a target
+router.post("/:targetId/daily-response", submitDailyResponse);
 
 // Delete a target
 router.delete("/:id", deleteTarget);

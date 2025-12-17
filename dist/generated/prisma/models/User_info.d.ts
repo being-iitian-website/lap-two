@@ -149,6 +149,7 @@ export type User_infoWhereInput = {
     targets?: Prisma.TargetListRelationFilter;
     revisions?: Prisma.RevisionListRelationFilter;
     focusSessions?: Prisma.FocusSessionListRelationFilter;
+    journals?: Prisma.JournalListRelationFilter;
 };
 export type User_infoOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -160,6 +161,7 @@ export type User_infoOrderByWithRelationInput = {
     targets?: Prisma.TargetOrderByRelationAggregateInput;
     revisions?: Prisma.RevisionOrderByRelationAggregateInput;
     focusSessions?: Prisma.FocusSessionOrderByRelationAggregateInput;
+    journals?: Prisma.JournalOrderByRelationAggregateInput;
 };
 export type User_infoWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -174,6 +176,7 @@ export type User_infoWhereUniqueInput = Prisma.AtLeast<{
     targets?: Prisma.TargetListRelationFilter;
     revisions?: Prisma.RevisionListRelationFilter;
     focusSessions?: Prisma.FocusSessionListRelationFilter;
+    journals?: Prisma.JournalListRelationFilter;
 }, "id" | "email">;
 export type User_infoOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -207,6 +210,7 @@ export type User_infoCreateInput = {
     targets?: Prisma.TargetCreateNestedManyWithoutUserInput;
     revisions?: Prisma.RevisionCreateNestedManyWithoutUserInput;
     focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+    journals?: Prisma.JournalCreateNestedManyWithoutUserInput;
 };
 export type User_infoUncheckedCreateInput = {
     id?: string;
@@ -218,6 +222,7 @@ export type User_infoUncheckedCreateInput = {
     targets?: Prisma.TargetUncheckedCreateNestedManyWithoutUserInput;
     revisions?: Prisma.RevisionUncheckedCreateNestedManyWithoutUserInput;
     focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+    journals?: Prisma.JournalUncheckedCreateNestedManyWithoutUserInput;
 };
 export type User_infoUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -229,6 +234,7 @@ export type User_infoUpdateInput = {
     targets?: Prisma.TargetUpdateManyWithoutUserNestedInput;
     revisions?: Prisma.RevisionUpdateManyWithoutUserNestedInput;
     focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+    journals?: Prisma.JournalUpdateManyWithoutUserNestedInput;
 };
 export type User_infoUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -240,6 +246,7 @@ export type User_infoUncheckedUpdateInput = {
     targets?: Prisma.TargetUncheckedUpdateManyWithoutUserNestedInput;
     revisions?: Prisma.RevisionUncheckedUpdateManyWithoutUserNestedInput;
     focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
+    journals?: Prisma.JournalUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type User_infoCreateManyInput = {
     id?: string;
@@ -338,6 +345,18 @@ export type User_infoUpdateOneRequiredWithoutFocusSessionsNestedInput = {
     connect?: Prisma.User_infoWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.User_infoUpdateToOneWithWhereWithoutFocusSessionsInput, Prisma.User_infoUpdateWithoutFocusSessionsInput>, Prisma.User_infoUncheckedUpdateWithoutFocusSessionsInput>;
 };
+export type User_infoCreateNestedOneWithoutJournalsInput = {
+    create?: Prisma.XOR<Prisma.User_infoCreateWithoutJournalsInput, Prisma.User_infoUncheckedCreateWithoutJournalsInput>;
+    connectOrCreate?: Prisma.User_infoCreateOrConnectWithoutJournalsInput;
+    connect?: Prisma.User_infoWhereUniqueInput;
+};
+export type User_infoUpdateOneRequiredWithoutJournalsNestedInput = {
+    create?: Prisma.XOR<Prisma.User_infoCreateWithoutJournalsInput, Prisma.User_infoUncheckedCreateWithoutJournalsInput>;
+    connectOrCreate?: Prisma.User_infoCreateOrConnectWithoutJournalsInput;
+    upsert?: Prisma.User_infoUpsertWithoutJournalsInput;
+    connect?: Prisma.User_infoWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.User_infoUpdateToOneWithWhereWithoutJournalsInput, Prisma.User_infoUpdateWithoutJournalsInput>, Prisma.User_infoUncheckedUpdateWithoutJournalsInput>;
+};
 export type User_infoCreateWithoutTargetsInput = {
     id?: string;
     name?: string | null;
@@ -347,6 +366,7 @@ export type User_infoCreateWithoutTargetsInput = {
     updatedAt?: Date | string;
     revisions?: Prisma.RevisionCreateNestedManyWithoutUserInput;
     focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+    journals?: Prisma.JournalCreateNestedManyWithoutUserInput;
 };
 export type User_infoUncheckedCreateWithoutTargetsInput = {
     id?: string;
@@ -357,6 +377,7 @@ export type User_infoUncheckedCreateWithoutTargetsInput = {
     updatedAt?: Date | string;
     revisions?: Prisma.RevisionUncheckedCreateNestedManyWithoutUserInput;
     focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+    journals?: Prisma.JournalUncheckedCreateNestedManyWithoutUserInput;
 };
 export type User_infoCreateOrConnectWithoutTargetsInput = {
     where: Prisma.User_infoWhereUniqueInput;
@@ -380,6 +401,7 @@ export type User_infoUpdateWithoutTargetsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     revisions?: Prisma.RevisionUpdateManyWithoutUserNestedInput;
     focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+    journals?: Prisma.JournalUpdateManyWithoutUserNestedInput;
 };
 export type User_infoUncheckedUpdateWithoutTargetsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -390,6 +412,7 @@ export type User_infoUncheckedUpdateWithoutTargetsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     revisions?: Prisma.RevisionUncheckedUpdateManyWithoutUserNestedInput;
     focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
+    journals?: Prisma.JournalUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type User_infoCreateWithoutRevisionsInput = {
     id?: string;
@@ -400,6 +423,7 @@ export type User_infoCreateWithoutRevisionsInput = {
     updatedAt?: Date | string;
     targets?: Prisma.TargetCreateNestedManyWithoutUserInput;
     focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+    journals?: Prisma.JournalCreateNestedManyWithoutUserInput;
 };
 export type User_infoUncheckedCreateWithoutRevisionsInput = {
     id?: string;
@@ -410,6 +434,7 @@ export type User_infoUncheckedCreateWithoutRevisionsInput = {
     updatedAt?: Date | string;
     targets?: Prisma.TargetUncheckedCreateNestedManyWithoutUserInput;
     focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+    journals?: Prisma.JournalUncheckedCreateNestedManyWithoutUserInput;
 };
 export type User_infoCreateOrConnectWithoutRevisionsInput = {
     where: Prisma.User_infoWhereUniqueInput;
@@ -433,6 +458,7 @@ export type User_infoUpdateWithoutRevisionsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     targets?: Prisma.TargetUpdateManyWithoutUserNestedInput;
     focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+    journals?: Prisma.JournalUpdateManyWithoutUserNestedInput;
 };
 export type User_infoUncheckedUpdateWithoutRevisionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -443,6 +469,7 @@ export type User_infoUncheckedUpdateWithoutRevisionsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     targets?: Prisma.TargetUncheckedUpdateManyWithoutUserNestedInput;
     focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
+    journals?: Prisma.JournalUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type User_infoCreateWithoutFocusSessionsInput = {
     id?: string;
@@ -453,6 +480,7 @@ export type User_infoCreateWithoutFocusSessionsInput = {
     updatedAt?: Date | string;
     targets?: Prisma.TargetCreateNestedManyWithoutUserInput;
     revisions?: Prisma.RevisionCreateNestedManyWithoutUserInput;
+    journals?: Prisma.JournalCreateNestedManyWithoutUserInput;
 };
 export type User_infoUncheckedCreateWithoutFocusSessionsInput = {
     id?: string;
@@ -463,6 +491,7 @@ export type User_infoUncheckedCreateWithoutFocusSessionsInput = {
     updatedAt?: Date | string;
     targets?: Prisma.TargetUncheckedCreateNestedManyWithoutUserInput;
     revisions?: Prisma.RevisionUncheckedCreateNestedManyWithoutUserInput;
+    journals?: Prisma.JournalUncheckedCreateNestedManyWithoutUserInput;
 };
 export type User_infoCreateOrConnectWithoutFocusSessionsInput = {
     where: Prisma.User_infoWhereUniqueInput;
@@ -486,6 +515,7 @@ export type User_infoUpdateWithoutFocusSessionsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     targets?: Prisma.TargetUpdateManyWithoutUserNestedInput;
     revisions?: Prisma.RevisionUpdateManyWithoutUserNestedInput;
+    journals?: Prisma.JournalUpdateManyWithoutUserNestedInput;
 };
 export type User_infoUncheckedUpdateWithoutFocusSessionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -496,6 +526,64 @@ export type User_infoUncheckedUpdateWithoutFocusSessionsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     targets?: Prisma.TargetUncheckedUpdateManyWithoutUserNestedInput;
     revisions?: Prisma.RevisionUncheckedUpdateManyWithoutUserNestedInput;
+    journals?: Prisma.JournalUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type User_infoCreateWithoutJournalsInput = {
+    id?: string;
+    name?: string | null;
+    email: string;
+    password?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    targets?: Prisma.TargetCreateNestedManyWithoutUserInput;
+    revisions?: Prisma.RevisionCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput;
+};
+export type User_infoUncheckedCreateWithoutJournalsInput = {
+    id?: string;
+    name?: string | null;
+    email: string;
+    password?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    targets?: Prisma.TargetUncheckedCreateNestedManyWithoutUserInput;
+    revisions?: Prisma.RevisionUncheckedCreateNestedManyWithoutUserInput;
+    focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput;
+};
+export type User_infoCreateOrConnectWithoutJournalsInput = {
+    where: Prisma.User_infoWhereUniqueInput;
+    create: Prisma.XOR<Prisma.User_infoCreateWithoutJournalsInput, Prisma.User_infoUncheckedCreateWithoutJournalsInput>;
+};
+export type User_infoUpsertWithoutJournalsInput = {
+    update: Prisma.XOR<Prisma.User_infoUpdateWithoutJournalsInput, Prisma.User_infoUncheckedUpdateWithoutJournalsInput>;
+    create: Prisma.XOR<Prisma.User_infoCreateWithoutJournalsInput, Prisma.User_infoUncheckedCreateWithoutJournalsInput>;
+    where?: Prisma.User_infoWhereInput;
+};
+export type User_infoUpdateToOneWithWhereWithoutJournalsInput = {
+    where?: Prisma.User_infoWhereInput;
+    data: Prisma.XOR<Prisma.User_infoUpdateWithoutJournalsInput, Prisma.User_infoUncheckedUpdateWithoutJournalsInput>;
+};
+export type User_infoUpdateWithoutJournalsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    targets?: Prisma.TargetUpdateManyWithoutUserNestedInput;
+    revisions?: Prisma.RevisionUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput;
+};
+export type User_infoUncheckedUpdateWithoutJournalsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    targets?: Prisma.TargetUncheckedUpdateManyWithoutUserNestedInput;
+    revisions?: Prisma.RevisionUncheckedUpdateManyWithoutUserNestedInput;
+    focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput;
 };
 /**
  * Count Type User_infoCountOutputType
@@ -504,11 +592,13 @@ export type User_infoCountOutputType = {
     targets: number;
     revisions: number;
     focusSessions: number;
+    journals: number;
 };
 export type User_infoCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     targets?: boolean | User_infoCountOutputTypeCountTargetsArgs;
     revisions?: boolean | User_infoCountOutputTypeCountRevisionsArgs;
     focusSessions?: boolean | User_infoCountOutputTypeCountFocusSessionsArgs;
+    journals?: boolean | User_infoCountOutputTypeCountJournalsArgs;
 };
 /**
  * User_infoCountOutputType without action
@@ -537,6 +627,12 @@ export type User_infoCountOutputTypeCountRevisionsArgs<ExtArgs extends runtime.T
 export type User_infoCountOutputTypeCountFocusSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.FocusSessionWhereInput;
 };
+/**
+ * User_infoCountOutputType without action
+ */
+export type User_infoCountOutputTypeCountJournalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.JournalWhereInput;
+};
 export type User_infoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     name?: boolean;
@@ -547,6 +643,7 @@ export type User_infoSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
     targets?: boolean | Prisma.User_info$targetsArgs<ExtArgs>;
     revisions?: boolean | Prisma.User_info$revisionsArgs<ExtArgs>;
     focusSessions?: boolean | Prisma.User_info$focusSessionsArgs<ExtArgs>;
+    journals?: boolean | Prisma.User_info$journalsArgs<ExtArgs>;
     _count?: boolean | Prisma.User_infoCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["user_info"]>;
 export type User_infoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -578,6 +675,7 @@ export type User_infoInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
     targets?: boolean | Prisma.User_info$targetsArgs<ExtArgs>;
     revisions?: boolean | Prisma.User_info$revisionsArgs<ExtArgs>;
     focusSessions?: boolean | Prisma.User_info$focusSessionsArgs<ExtArgs>;
+    journals?: boolean | Prisma.User_info$journalsArgs<ExtArgs>;
     _count?: boolean | Prisma.User_infoCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type User_infoIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {};
@@ -588,6 +686,7 @@ export type $User_infoPayload<ExtArgs extends runtime.Types.Extensions.InternalA
         targets: Prisma.$TargetPayload<ExtArgs>[];
         revisions: Prisma.$RevisionPayload<ExtArgs>[];
         focusSessions: Prisma.$FocusSessionPayload<ExtArgs>[];
+        journals: Prisma.$JournalPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -928,6 +1027,7 @@ export interface Prisma__User_infoClient<T, Null = never, ExtArgs extends runtim
     targets<T extends Prisma.User_info$targetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User_info$targetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     revisions<T extends Prisma.User_info$revisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User_info$revisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RevisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     focusSessions<T extends Prisma.User_info$focusSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User_info$focusSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    journals<T extends Prisma.User_info$journalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User_info$journalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1397,6 +1497,29 @@ export type User_info$focusSessionsArgs<ExtArgs extends runtime.Types.Extensions
     take?: number;
     skip?: number;
     distinct?: Prisma.FocusSessionScalarFieldEnum | Prisma.FocusSessionScalarFieldEnum[];
+};
+/**
+ * User_info.journals
+ */
+export type User_info$journalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Journal
+     */
+    select?: Prisma.JournalSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Journal
+     */
+    omit?: Prisma.JournalOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.JournalInclude<ExtArgs> | null;
+    where?: Prisma.JournalWhereInput;
+    orderBy?: Prisma.JournalOrderByWithRelationInput | Prisma.JournalOrderByWithRelationInput[];
+    cursor?: Prisma.JournalWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.JournalScalarFieldEnum | Prisma.JournalScalarFieldEnum[];
 };
 /**
  * User_info without action

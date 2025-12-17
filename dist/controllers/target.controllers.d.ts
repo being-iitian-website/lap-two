@@ -25,4 +25,15 @@ export declare const carryForwardTarget: (req: AuthenticatedRequest, res: Respon
  * DELETE /api/targets/:id
  */
 export declare const deleteTarget: (req: AuthenticatedRequest, res: Response) => Promise<Response | void>;
+/**
+ * SUBMIT DAILY RESPONSE
+ * POST /api/targets/:targetId/daily-response
+ *
+ * Submit daily question responses for a target
+ * Validation:
+ * - Target must belong to logged-in user
+ * - responseDate must be today
+ * - Responses cannot be overwritten
+ */
+export declare const submitDailyResponse: (req: AuthenticatedRequest, res: Response) => Promise<Response | void>;
 //# sourceMappingURL=target.controllers.d.ts.map

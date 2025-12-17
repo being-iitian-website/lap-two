@@ -45,6 +45,7 @@ export declare const ModelName: {
     readonly Target: "Target";
     readonly Revision: "Revision";
     readonly FocusSession: "FocusSession";
+    readonly Journal: "Journal";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -76,6 +77,11 @@ export declare const TargetScalarFieldEnum: {
     readonly endTime: "endTime";
     readonly carryForward: "carryForward";
     readonly status: "status";
+    readonly dailyQuestion1: "dailyQuestion1";
+    readonly dailyAnswer1: "dailyAnswer1";
+    readonly dailyQuestion2: "dailyQuestion2";
+    readonly dailyAnswer2: "dailyAnswer2";
+    readonly responseDate: "responseDate";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
     readonly userId: "userId";
@@ -105,6 +111,16 @@ export declare const FocusSessionScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type FocusSessionScalarFieldEnum = (typeof FocusSessionScalarFieldEnum)[keyof typeof FocusSessionScalarFieldEnum];
+export declare const JournalScalarFieldEnum: {
+    readonly id: "id";
+    readonly date: "date";
+    readonly notes: "notes";
+    readonly userId: "userId";
+    readonly targetId: "targetId";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type JournalScalarFieldEnum = (typeof JournalScalarFieldEnum)[keyof typeof JournalScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";

@@ -22,4 +22,9 @@ export type Revision = Prisma.RevisionModel;
  *
  */
 export type FocusSession = Prisma.FocusSessionModel;
+/**
+ * Model Journal
+ *
+ */
+export type Journal = Prisma.JournalModel;
 //# sourceMappingURL=browser.d.ts.map

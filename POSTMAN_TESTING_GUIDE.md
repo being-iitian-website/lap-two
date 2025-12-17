@@ -356,6 +356,18 @@ or
   "message": "Both startTime and endTime must be provided together, or both omitted"
 }
 ```
+or
+```json
+{
+  "message": "question1 and answer1 are required"
+}
+```
+or
+```json
+{
+  "message": "Responses for today already exist and cannot be overwritten"
+}
+```
 
 ### 404 Not Found
 ```json
@@ -404,6 +416,62 @@ or
 
 ---
 
+## Step 8: Submit Daily Response for a Target
+
+### Request
+- **Method**: `POST`
+- **URL**: `http://localhost:5000/api/targets/{target_id}/daily-response`
+  Replace `{target_id}` with the actual target ID from Step 3.
+
+- **Headers**:
+  ```
+  Content-Type: application/json
+  Authorization: Bearer YOUR_JWT_TOKEN_HERE
+  ```
+
+- **Body** (raw JSON):
+  ```json
+  {
+    "question1": "What did I study today?",
+    "answer1": "Graphs and Trees",
+    "question2": "What was challenging?",
+    "answer2": "DFS recursion"
+  }
+  ```
+
+   **Note**: 
+   - `question1` and `answer1` are **required** fields.
+   - `question2` and `answer2` are **optional** fields.
+   - The `responseDate` is automatically set to today's date.
+   - The target's `status` is automatically set to `"completed"` when a daily response is submitted.
+   - Responses cannot be overwritten once submitted for today.
+
+### Expected Response (200 OK)
+```json
+{
+  "message": "Daily response submitted successfully",
+  "target": {
+    "id": "uuid-string-here",
+    "title": "Differential Equations Practice",
+    "status": "completed",
+    "responseDate": "2025-01-16T00:00:00.000Z"
+  }
+}
+```
+
+### Test Cases:
+1. **Valid Request with all fields**: Should return 200 with target ID and responseDate
+2. **Valid Request with only question1/answer1**: Omit `question2` and `answer2` → Should return 200
+3. **Missing Token**: Remove Authorization header → Should return 401 Unauthorized
+4. **Invalid Token**: Use fake token → Should return 401 Invalid or expired token
+5. **Invalid Target ID**: Use non-existent ID → Should return 404 Target not found
+6. **Missing Required Fields**: Remove `question1` or `answer1` → Should return 400 Bad Request
+7. **Submit Response for Other User's Target**: Use target ID from different user → Should return 404 Access denied
+8. **Overwrite Existing Response**: Submit response for the same target twice on the same day → Should return 400 "Responses for today already exist and cannot be overwritten"
+9. **Submit Response for Different Days**: Submit response today, then submit again tomorrow → Should return 200 (allowed for different days)
+
+---
+
 ## Quick Test Checklist
 
 - [ ] Register a new user and get JWT token
@@ -413,6 +481,8 @@ or
 - [ ] Update target status to "completed"
 - [ ] Update target status to "missed"
 - [ ] Carry forward a missed target
+- [ ] Submit daily response for a target
+- [ ] Try submitting daily response twice on same day (should fail)
 - [ ] Delete a target
 - [ ] Try accessing other user's target (should fail)
 - [ ] Try deleting other user's target (should fail)

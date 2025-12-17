@@ -14,6 +14,8 @@ router.get("/today", target_controllers_1.getTodayTargets);
 router.patch("/:id/status", target_controllers_1.updateTargetStatus);
 // Carry forward a missed target
 router.post("/:id/carry-forward", target_controllers_1.carryForwardTarget);
+// Submit daily response for a target
+router.post("/:targetId/daily-response", target_controllers_1.submitDailyResponse);
 // Delete a target
 router.delete("/:id", target_controllers_1.deleteTarget);
 exports.default = router;

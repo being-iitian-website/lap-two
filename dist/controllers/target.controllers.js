@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTarget = exports.carryForwardTarget = exports.updateTargetStatus = exports.getTodayTargets = exports.createTarget = void 0;
+exports.submitDailyResponse = exports.deleteTarget = exports.carryForwardTarget = exports.updateTargetStatus = exports.getTodayTargets = exports.createTarget = void 0;
 const prismaconfig_1 = __importDefault(require("../config/prismaconfig"));
 /**
  * CREATE TARGET
@@ -306,4 +306,82 @@ const deleteTarget = async (req, res) => {
     }
 };
 exports.deleteTarget = deleteTarget;
+/**
+ * SUBMIT DAILY RESPONSE
+ * POST /api/targets/:targetId/daily-response
+ *
+ * Submit daily question responses for a target
+ * Validation:
+ * - Target must belong to logged-in user
+ * - responseDate must be today
+ * - Responses cannot be overwritten
+ */
+const submitDailyResponse = async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        const { targetId } = req.params;
+        const { question1, answer1, question2, answer2 } = req.body;
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        // Validate required fields
+        if (!question1 || !answer1) {
+            return res.status(400).json({
+                message: "question1 and answer1 are required",
+            });
+        }
+        // Check if target exists and belongs to user
+        const target = await prismaconfig_1.default.target.findFirst({
+            where: {
+                id: targetId,
+                userId,
+            },
+        });
+        if (!target) {
+            return res.status(404).json({ message: "Target not found or access denied" });
+        }
+        // Get today's date range
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        // Check if responses already exist for today (cannot overwrite)
+        if (target.responseDate) {
+            const responseDate = new Date(target.responseDate);
+            responseDate.setHours(0, 0, 0, 0);
+            if (responseDate.getTime() === today.getTime()) {
+                return res.status(400).json({
+                    message: "Responses for today already exist and cannot be overwritten",
+                });
+            }
+        }
+        // Update target with daily responses and set status to completed
+        const updatedTarget = await prismaconfig_1.default.target.update({
+            where: { id: targetId },
+            data: {
+                dailyQuestion1: question1,
+                dailyAnswer1: answer1,
+                dailyQuestion2: question2 || null,
+                dailyAnswer2: answer2 || null,
+                responseDate: today, // Set responseDate to today
+                status: "completed", // Set status to completed when response is submitted
+            },
+        });
+        return res.json({
+            message: "Daily response submitted successfully",
+            target: {
+                id: updatedTarget.id,
+                title: updatedTarget.title,
+                status: updatedTarget.status,
+                responseDate: updatedTarget.responseDate,
+            },
+        });
+    }
+    catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error submitting daily response:", error);
+        return res.status(500).json({ message: "Failed to submit daily response" });
+    }
+};
+exports.submitDailyResponse = submitDailyResponse;
 //# sourceMappingURL=target.controllers.js.map

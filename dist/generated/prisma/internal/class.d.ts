@@ -155,6 +155,17 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get focusSession(): Prisma.FocusSessionDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    /**
+     * `prisma.journal`: Exposes CRUD operations for the **Journal** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Journals
+      * const journals = await prisma.journal.findMany()
+      * ```
+      */
+    get journal(): Prisma.JournalDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
 }
 export declare function getPrismaClientClass(dirname: string): PrismaClientConstructor;
 //# sourceMappingURL=class.d.ts.map
