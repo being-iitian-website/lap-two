@@ -5,15 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateRevisionStatus = exports.getRevisionHistory = exports.getRevisionAnalytics = exports.getRevisionsByDate = exports.createRevision = void 0;
 const prismaconfig_1 = __importDefault(require("../config/prismaconfig"));
-/**
- * Helper function to update missed revisions
- * Day boundary is 5:00 AM local time.
- *
- * Until 5:00 AM, the system still treats the previous calendar day as "today",
- * so revisions from "yesterday" are only marked as missed after 5:00 AM.
- *
- * Updates status from pending to missed if revisionDate < effectiveToday and status != completed
- */
 const updateMissedRevisions = async (userId) => {
     const now = new Date();
     const effectiveToday = new Date(now);
@@ -59,8 +50,6 @@ const createRevision = async (req, res) => {
         if (isNaN(date.getTime())) {
             return res.status(400).json({ message: "Invalid date format for revisionDate" });
         }
-        // Attach the current local time to the provided date so that
-        // both the chosen date and the creation time are stored.
         const now = new Date();
         date.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
         const revision = await prismaconfig_1.default.revision.create({

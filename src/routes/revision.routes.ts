@@ -4,10 +4,10 @@ import { authMiddleware } from "../middleware/auth.middleware";
 import {
   createRevision,
   getRevisionsByDate,
-  getRevisionAnalytics,
-  getRevisionHistory,
   updateRevisionStatus,
-} from "../controllers/revision.controller";
+} from "../controllers/revision/revision.controller";
+import { getRevisionAnalytics } from "../controllers/revision/revisionanalysis.controller";
+import { getRevisionHistory } from "../controllers/revision/recentrevision.controller";
 
 const router = Router();
 

@@ -5,10 +5,12 @@ import {
   createTarget,
   getTodayTargets,
   updateTargetStatus,
+} from "../controllers/targets/targets.controllers";
+import {
   carryForwardTarget,
   deleteTarget,
   submitDailyResponse,
-} from "../controllers/target.controllers";
+} from "../controllers/targets/targetresponses.controller";
 
 const router = Router();
 

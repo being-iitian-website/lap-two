@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
-import prisma from "../config/prismaconfig";
-import { generateToken, type JwtUserPayload } from "../utils/jwt";
+import prisma from "../../config/prismaconfig";
+import { generateToken, type JwtUserPayload } from "../../utils/jwt";
 
 interface RegisterBody {
   name?: string;

@@ -4,7 +4,7 @@ import { authMiddleware } from "../middleware/auth.middleware";
 import {
   saveFocusSession,
   getRecentFocusSessions,
-} from "../controllers/focus.controller";
+} from "../controllers/Focus_session/focus.controller";
 
 const router = Router();
 

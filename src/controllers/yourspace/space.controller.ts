@@ -1,7 +1,7 @@
 import type { Response } from "express";
 
-import prisma from "../config/prismaconfig";
-import type { AuthenticatedRequest } from "../middleware/auth.middleware";
+import prisma from "../../config/prismaconfig";
+import type { AuthenticatedRequest } from "../../middleware/auth.middleware";
 
 interface SaveJournalBody {
   id?: string;
@@ -12,9 +12,6 @@ interface SaveJournalBody {
 /**
  * CREATE / UPDATE JOURNAL (Upsert-style)
  * POST /api/journal
- *
- * If body contains `id`, updates that journal (for the current user).
- * If no `id`, creates a new journal entry.
  */
 export const saveJournal = async (
   req: AuthenticatedRequest,

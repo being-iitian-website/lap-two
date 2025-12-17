@@ -67,7 +67,7 @@ model Target {
   type          TargetType
   plannedHours  Float?
   actualHours   Float?
-  questions     Int?
+  questions     Int?         @default(0)
   startTime     DateTime?
   endTime       DateTime?
   carryForward  Boolean       @default(false)

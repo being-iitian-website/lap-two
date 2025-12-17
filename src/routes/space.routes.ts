@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { authMiddleware } from "../middleware/auth.middleware";
-import { saveJournal, getMyJournals, getTodayResponses } from "../controllers/space.controller";
+import { saveJournal, getMyJournals, getTodayResponses } from "../controllers/yourspace/space.controller";
 
 const router = Router();
 

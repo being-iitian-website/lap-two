@@ -1,7 +1,7 @@
 import type { Response } from "express";
 
-import prisma from "../config/prismaconfig";
-import type { AuthenticatedRequest } from "../middleware/auth.middleware";
+import prisma from "../../config/prismaconfig";
+import type { AuthenticatedRequest } from "../../middleware/auth.middleware";
 
 interface SaveFocusSessionBody {
   notes?: string;
