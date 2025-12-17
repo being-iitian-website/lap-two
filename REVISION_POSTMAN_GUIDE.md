@@ -274,6 +274,54 @@ You should see the auto-created revision with `source: "target"` and `targetId` 
 
 ---
 
+## Step 6: Update Revision Status
+
+### Request
+- **Method**: `PATCH`
+- **URL**: `http://localhost:5000/api/revisions/{revision_id}/status`
+  Replace `{revision_id}` with the actual revision ID.
+
+- **Headers**:
+  ```
+  Content-Type: application/json
+  Authorization: Bearer YOUR_JWT_TOKEN_HERE
+  ```
+
+- **Body** (raw JSON):
+  ```json
+  {
+    "status": "completed"
+  }
+  ```
+
+### Expected Response (200 OK)
+```json
+{
+  "message": "Revision marked as completed",
+  "revision": {
+    "id": "uuid-string-here",
+    "status": "completed",
+    "subject": "Physics",
+    "units": ["Thermodynamics", "Laws of Motion"]
+  }
+}
+```
+
+### Allowed Status for This Endpoint:
+- `"completed"` - Marks a **pending** revision as completed
+
+### Test Cases:
+1. **Mark Pending as Completed**: Use `"status": "completed"` on a `pending` revision → Should return 200 with success message
+2. **Mark Missed as Completed**: Use `"status": "completed"` on a `missed` revision → Should return 400 (`Missed revisions cannot be updated. They are locked.`)
+3. **Mark Completed Again**: Use `"status": "completed"` on an already `completed` revision → Should return 400 (`Only pending revisions can be marked as completed`)
+4. **Missing Token**: Remove Authorization header → Should return 401 Unauthorized
+5. **Invalid Token**: Use fake token → Should return 401 Invalid or expired token
+6. **Invalid Revision ID**: Use non-existent ID → Should return 404 Revision not found
+7. **Invalid Status**: Use anything other than `"completed"` (e.g. `"pending"`, `"missed"`, `"invalid"`) → Should return 400 (`Invalid status. Only 'completed' is allowed for this endpoint`)
+8. **Update Other User's Revision**: Use revision ID from different user → Should return 404 Access denied
+
+---
+
 ## Missed Revision Logic (Backend Automatic)
 
 The backend automatically updates revision status from `pending` to `missed` when:
@@ -281,15 +329,21 @@ The backend automatically updates revision status from `pending` to `missed` whe
 - `revisionDate < today`
 - AND `status != "completed"`
 
+**Auto-Update Triggers**:
 This happens automatically on:
 - `GET /api/revisions?date=...`
 - `GET /api/revisions/analytics/count`
 - `GET /api/revisions/history?range=...`
 
+**Note**: The system checks and updates missed revisions in real-time when any GET endpoint is called. This ensures data is always current without requiring a separate cron job.
+
 **Example**:
 1. Create revision with `revisionDate: "2025-01-10"` and `status: "pending"`
 2. Today is `2025-01-15`
 3. When you call any GET endpoint, backend automatically updates it to `status: "missed"`
+4. The revision will now show as `"missed"` in all subsequent queries
+
+**Important**: Once a revision is marked as `"completed"`, it will never be auto-updated to `"missed"`, even if the date has passed.
 
 ---
 
@@ -302,7 +356,9 @@ This happens automatically on:
 - [ ] Verify missed revision logic (create past date revision, check status)
 - [ ] Get revision analytics (count by subject/unit)
 - [ ] Get revision history (7 days, 30 days, all time)
+- [ ] Update revision status to "completed" (only for pending revisions)
 - [ ] Try accessing other user's revisions (should fail)
+- [ ] Try updating other user's revision status (should fail)
 
 ---
 
@@ -393,6 +449,22 @@ if (pm.response.code === 200 || pm.response.code === 201) {
 2. Get analytics → Should show separate counts for each unit
 3. Create revisions with same subject and same unit
 4. Get analytics → Should aggregate counts correctly
+
+### Scenario 5: Update Revision Status
+1. Create a revision with `status: "pending"`
+2. Update status to `"completed"` → Should succeed
+3. Get revisions by date → Should show `status: "completed"`
+4. Get analytics → Should show in `completed` count
+5. Try to update a `missed` revision to `"completed"` → Should fail with `400` (missed revisions are locked)
+6. Try to update an already `completed` revision again → Should fail with `400` (only pending → completed is allowed)
+
+### Scenario 6: Auto-Mark Missed Revisions
+1. Create revision with past date (e.g., 7 days ago) and `status: "pending"`
+2. Get revisions by any date → Status automatically updated to `"missed"`
+3. Get analytics → Should show in `missed` count
+4. Get history → Should show in `missed` count
+5. Try to manually update this `missed` revision to `"completed"` → Should fail with `400` (missed revisions are locked)
+6. Create another revision, mark it as `"completed"` using the status API → It should stay `"completed"` and never auto-change to `"missed"`
 
 ---
 

@@ -6,6 +6,7 @@ import {
   getRevisionsByDate,
   getRevisionAnalytics,
   getRevisionHistory,
+  updateRevisionStatus,
 } from "../controllers/revision.controller";
 
 const router = Router();
@@ -24,6 +25,9 @@ router.get("/analytics/count", getRevisionAnalytics);
 
 // Get revision history (7 days, 30 days, or all time)
 router.get("/history", getRevisionHistory);
+
+// Update revision status
+router.patch("/:id/status", updateRevisionStatus);
 
 export default router;
 

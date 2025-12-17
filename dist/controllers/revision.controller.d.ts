@@ -20,4 +20,9 @@ export declare const getRevisionAnalytics: (req: AuthenticatedRequest, res: Resp
  * GET /api/revisions/history?range=7|30|all
  */
 export declare const getRevisionHistory: (req: AuthenticatedRequest, res: Response) => Promise<Response | void>;
+/**
+ * UPDATE REVISION STATUS
+ * PATCH /api/revisions/:id/status
+ */
+export declare const updateRevisionStatus: (req: AuthenticatedRequest, res: Response) => Promise<Response | void>;
 //# sourceMappingURL=revision.controller.d.ts.map

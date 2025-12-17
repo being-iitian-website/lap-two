@@ -15,17 +15,30 @@ interface CreateRevisionBody {
 
 /**
  * Helper function to update missed revisions
- * Updates status from pending to missed if revisionDate < today and status != completed
+ * Day boundary is 5:00 AM local time.
+ *
+ * Until 5:00 AM, the system still treats the previous calendar day as "today",
+ * so revisions from "yesterday" are only marked as missed after 5:00 AM.
+ *
+ * Updates status from pending to missed if revisionDate < effectiveToday and status != completed
  */
 const updateMissedRevisions = async (userId: string): Promise<void> => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const now = new Date();
+  const effectiveToday = new Date(now);
+
+  // Before 5 AM, roll back one day so that "today" is effectively yesterday.
+  if (now.getHours() < 5) {
+    effectiveToday.setDate(effectiveToday.getDate() - 1);
+  }
+
+  // Normalise to start of effective day for date-only comparison
+  effectiveToday.setHours(0, 0, 0, 0);
 
   await (prisma as any).revision.updateMany({
     where: {
       userId,
       revisionDate: {
-        lt: today,
+        lt: effectiveToday,
       },
       status: {
         not: "completed",
@@ -316,6 +329,85 @@ export const getRevisionHistory = async (
     // eslint-disable-next-line no-console
     console.error("Error fetching revision history:", error);
     return res.status(500).json({ message: "Failed to fetch revision history" });
+  }
+};
+
+interface UpdateRevisionStatusBody {
+  status: RevisionStatus;
+}
+
+/**
+ * UPDATE REVISION STATUS
+ * PATCH /api/revisions/:id/status
+ */
+export const updateRevisionStatus = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = req.user?.id as string;
+    const { id } = req.params as { id: string };
+    const { status } = req.body as UpdateRevisionStatusBody;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    // Validate status - this endpoint is ONLY for marking as completed
+    if (status !== "completed") {
+      return res.status(400).json({
+        message: "Invalid status. Only 'completed' is allowed for this endpoint",
+      });
+    }
+
+    // Check if revision exists and belongs to user
+    const revision = await (prisma as any).revision.findFirst({
+      where: {
+        id,
+        userId,
+      },
+    });
+
+    if (!revision) {
+      return res.status(404).json({ message: "Revision not found or access denied" });
+    }
+
+    // Business rules:
+    // - Only pending revisions can transition to completed
+    // - Missed revisions are locked and cannot be updated
+    if (revision.status === "missed") {
+      return res
+        .status(400)
+        .json({ message: "Missed revisions cannot be updated. They are locked." });
+    }
+
+    if (revision.status !== "pending") {
+      return res.status(400).json({
+        message: "Only pending revisions can be marked as completed",
+      });
+    }
+
+    // Update the revision status to completed
+    const updatedRevision = await (prisma as any).revision.update({
+      where: { id },
+      data: {
+        status: "completed",
+      },
+    });
+
+    return res.json({
+      message: "Revision marked as completed",
+      revision: {
+        id: updatedRevision.id,
+        status: updatedRevision.status,
+        subject: updatedRevision.subject,
+        units: updatedRevision.units,
+      },
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error updating revision status:", error);
+    return res.status(500).json({ message: "Failed to update revision status" });
   }
 };
 
