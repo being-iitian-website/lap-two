@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum TargetType {
+  theory
+  lecture
+  revision
+  solving
+  mock
+}
+
+enum TargetStatus {
+  pending
+  completed
+  missed
+}
+
+enum RevisionStatus {
+  pending
+  completed
+  missed
+}
+
+enum RevisionSource {
+  manual
+  target
+}
+
+
+
+model User_info {
+  id         String   @id @default(uuid())
+  name       String?
+  email      String   @unique
+  password   String?          
+ 
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  targets   Target[]
+  revisions  Revision[] 
+}
+
+
+model Target {
+  id            String        @id @default(uuid())
+  field         String
+  subject       String
+  title         String
+  type          TargetType
+  plannedHours  Float?
+  actualHours   Float?
+  questions     Int?
+  startTime     DateTime?
+  endTime       DateTime?
+  carryForward  Boolean       @default(false)
+  status        TargetStatus  @default(pending)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  userId String
+  user   User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  revisions Revision[] 
+}
+
+
+model Revision {
+  id           String          @id @default(uuid())
+  subject      String
+  units        String[]        // Array of units
+  notes        String?
+  revisionDate DateTime
+  status       RevisionStatus  @default(pending)
+  source       RevisionSource
+
+  // If revision came from a Target
+  targetId String?
+  target   Target? @relation(fields: [targetId], references: [id], onDelete: Cascade)
+
+  // User relation
+  userId String
+  user   User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

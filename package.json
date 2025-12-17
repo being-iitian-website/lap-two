@@ -1,0 +1,49 @@
+{
+  "name": "beingiit_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "fulltest": "npm run lint && npm run format",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "watch": "tsc -w",
+    "server": "nodemon dist/index.js",
+    "dev": "concurrently \"npm run watch\" \"npm run server\"",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,css,md}'",
+    "prepare": "husky install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.19.1",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.10.1",
+    "prisma": "^6.19.1",
+    "swagger-ui": "^5.31.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^22.10.2",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.18.0",
+    "husky": "^9.1.7",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  }
+}
