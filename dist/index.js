@@ -14,6 +14,8 @@ const revision_routes_1 = __importDefault(require("./routes/revision.routes"));
 const focus_routes_1 = __importDefault(require("./routes/focus.routes"));
 const space_routes_1 = __importDefault(require("./routes/space.routes"));
 const performance_routes_1 = __importDefault(require("./routes/performance.routes"));
+const dashboard_routes_1 = __importDefault(require("./routes/dashboard.routes"));
+const nonacademic_routes_1 = __importDefault(require("./routes/nonacademic.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 exports.app = app;
@@ -33,6 +35,8 @@ app.use("/api/revisions", revision_routes_1.default);
 app.use("/api/focus", focus_routes_1.default);
 app.use("/api/yourspace", space_routes_1.default);
 app.use("/api/performance", performance_routes_1.default);
+app.use("/api", dashboard_routes_1.default);
+app.use("/api", nonacademic_routes_1.default);
 // Start server
 const port = process.env.PORT || 5000;
 const server = app.listen(port, () => {

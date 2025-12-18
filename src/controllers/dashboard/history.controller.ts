@@ -30,13 +30,16 @@ export const getHistoryByDate = async (
       });
     }
 
+    // Parse date and normalize to start of day (00:00:00)
+    // This must match exactly how wellness data is stored in nonacademic controller
     const targetDate = new Date(date);
     if (isNaN(targetDate.getTime())) {
       return res.status(400).json({ message: "Invalid date" });
     }
-
-    // Set to start of day (00:00:00)
+    
+    // Normalize to start of day - matches nonacademic controller normalization
     targetDate.setHours(0, 0, 0, 0);
+    
     const nextDay = new Date(targetDate);
     nextDay.setDate(nextDay.getDate() + 1);
 
@@ -89,6 +92,24 @@ export const getHistoryByDate = async (
       status: revision.status,
     }));
 
+    // Fetch wellness data for the given date
+    // Use date range query to handle any timezone or precision differences
+    // Wellness records store date normalized to start of day (00:00:00)
+    const wellness = await (prisma as any).dailyWellness.findFirst({
+      where: {
+        userId,
+        date: {
+          gte: targetDate,
+          lt: nextDay,
+        },
+      },
+      select: {
+        exerciseDone: true,
+        meditationDone: true,
+        waterIntakeMl: true,
+      },
+    });
+
     // Format response
     const response = {
       date,
@@ -100,6 +121,17 @@ export const getHistoryByDate = async (
         status: target.status,
       })),
       revisions: formattedRevisions,
+      wellness: wellness
+        ? {
+            exercise: wellness.exerciseDone,
+            meditation: wellness.meditationDone,
+            waterIntakeMl: wellness.waterIntakeMl,
+          }
+        : {
+            exercise: false,
+            meditation: false,
+            waterIntakeMl: null,
+          },
     };
 
     return res.json(response);
