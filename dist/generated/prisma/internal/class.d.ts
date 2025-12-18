@@ -166,6 +166,28 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get journal(): Prisma.JournalDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    /**
+     * `prisma.visionBoard`: Exposes CRUD operations for the **VisionBoard** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more VisionBoards
+      * const visionBoards = await prisma.visionBoard.findMany()
+      * ```
+      */
+    get visionBoard(): Prisma.VisionBoardDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.visionBoardItem`: Exposes CRUD operations for the **VisionBoardItem** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more VisionBoardItems
+      * const visionBoardItems = await prisma.visionBoardItem.findMany()
+      * ```
+      */
+    get visionBoardItem(): Prisma.VisionBoardItemDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
 }
 export declare function getPrismaClientClass(dirname: string): PrismaClientConstructor;
 //# sourceMappingURL=class.d.ts.map

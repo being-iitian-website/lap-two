@@ -27,4 +27,14 @@ export type FocusSession = Prisma.FocusSessionModel;
  *
  */
 export type Journal = Prisma.JournalModel;
+/**
+ * Model VisionBoard
+ *
+ */
+export type VisionBoard = Prisma.VisionBoardModel;
+/**
+ * Model VisionBoardItem
+ *
+ */
+export type VisionBoardItem = Prisma.VisionBoardItemModel;
 //# sourceMappingURL=browser.d.ts.map

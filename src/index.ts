@@ -7,7 +7,7 @@ import authRouter from "./routes/auth.routes";
 import targetRoutes from "./routes/target.routes";
 import revisionRoutes from "./routes/revision.routes";
 import focusRoutes from "./routes/focus.routes";
-import journalRoutes from "./routes/space.routes";
+import yourspaceRoutes from "./routes/space.routes";
 import performanceRoutes from "./routes/performance.routes";
 
 dotenv.config();
@@ -33,8 +33,9 @@ app.use("/api/auth", authRouter);
 app.use("/api/targets", targetRoutes);
 app.use("/api/revisions", revisionRoutes);
 app.use("/api/focus", focusRoutes);
-app.use("/api/journal", journalRoutes);
+app.use("/api/yourspace", yourspaceRoutes);
 app.use("/api/performance", performanceRoutes);
+
 
 const server = app.listen(port, () => {
   // eslint-disable-next-line no-console

@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defineExtension = exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.JournalScalarFieldEnum = exports.FocusSessionScalarFieldEnum = exports.RevisionScalarFieldEnum = exports.TargetScalarFieldEnum = exports.User_infoScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
+exports.defineExtension = exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.VisionBoardItemScalarFieldEnum = exports.VisionBoardScalarFieldEnum = exports.JournalScalarFieldEnum = exports.FocusSessionScalarFieldEnum = exports.RevisionScalarFieldEnum = exports.TargetScalarFieldEnum = exports.User_infoScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/library"));
 /**
  * Prisma Errors
@@ -107,7 +107,9 @@ exports.ModelName = {
     Target: 'Target',
     Revision: 'Revision',
     FocusSession: 'FocusSession',
-    Journal: 'Journal'
+    Journal: 'Journal',
+    VisionBoard: 'VisionBoard',
+    VisionBoardItem: 'VisionBoardItem'
 };
 /**
  * Enums
@@ -176,6 +178,31 @@ exports.JournalScalarFieldEnum = {
     notes: 'notes',
     userId: 'userId',
     targetId: 'targetId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.VisionBoardScalarFieldEnum = {
+    id: 'id',
+    columns: 'columns',
+    rows: 'rows',
+    gap: 'gap',
+    userId: 'userId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.VisionBoardItemScalarFieldEnum = {
+    id: 'id',
+    row: 'row',
+    column: 'column',
+    rowSpan: 'rowSpan',
+    columnSpan: 'columnSpan',
+    type: 'type',
+    text: 'text',
+    imageUrl: 'imageUrl',
+    fontSize: 'fontSize',
+    textColor: 'textColor',
+    background: 'background',
+    boardId: 'boardId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };

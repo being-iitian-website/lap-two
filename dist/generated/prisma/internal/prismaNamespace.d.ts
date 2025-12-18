@@ -258,6 +258,8 @@ export declare const ModelName: {
     readonly Revision: "Revision";
     readonly FocusSession: "FocusSession";
     readonly Journal: "Journal";
+    readonly VisionBoard: "VisionBoard";
+    readonly VisionBoardItem: "VisionBoardItem";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export interface TypeMapCb<GlobalOmitOptions = {}> extends runtime.Types.Utils.Fn<{
@@ -270,7 +272,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user_info" | "target" | "revision" | "focusSession" | "journal";
+        modelProps: "user_info" | "target" | "revision" | "focusSession" | "journal" | "visionBoard" | "visionBoardItem";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -644,6 +646,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        VisionBoard: {
+            payload: Prisma.$VisionBoardPayload<ExtArgs>;
+            fields: Prisma.VisionBoardFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.VisionBoardFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.VisionBoardFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload>;
+                };
+                findFirst: {
+                    args: Prisma.VisionBoardFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.VisionBoardFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload>;
+                };
+                findMany: {
+                    args: Prisma.VisionBoardFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload>[];
+                };
+                create: {
+                    args: Prisma.VisionBoardCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload>;
+                };
+                createMany: {
+                    args: Prisma.VisionBoardCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.VisionBoardCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload>[];
+                };
+                delete: {
+                    args: Prisma.VisionBoardDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload>;
+                };
+                update: {
+                    args: Prisma.VisionBoardUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.VisionBoardDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.VisionBoardUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.VisionBoardUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload>[];
+                };
+                upsert: {
+                    args: Prisma.VisionBoardUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardPayload>;
+                };
+                aggregate: {
+                    args: Prisma.VisionBoardAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateVisionBoard>;
+                };
+                groupBy: {
+                    args: Prisma.VisionBoardGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.VisionBoardGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.VisionBoardCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.VisionBoardCountAggregateOutputType> | number;
+                };
+            };
+        };
+        VisionBoardItem: {
+            payload: Prisma.$VisionBoardItemPayload<ExtArgs>;
+            fields: Prisma.VisionBoardItemFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.VisionBoardItemFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.VisionBoardItemFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload>;
+                };
+                findFirst: {
+                    args: Prisma.VisionBoardItemFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.VisionBoardItemFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload>;
+                };
+                findMany: {
+                    args: Prisma.VisionBoardItemFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload>[];
+                };
+                create: {
+                    args: Prisma.VisionBoardItemCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload>;
+                };
+                createMany: {
+                    args: Prisma.VisionBoardItemCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.VisionBoardItemCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload>[];
+                };
+                delete: {
+                    args: Prisma.VisionBoardItemDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload>;
+                };
+                update: {
+                    args: Prisma.VisionBoardItemUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.VisionBoardItemDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.VisionBoardItemUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.VisionBoardItemUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload>[];
+                };
+                upsert: {
+                    args: Prisma.VisionBoardItemUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$VisionBoardItemPayload>;
+                };
+                aggregate: {
+                    args: Prisma.VisionBoardItemAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateVisionBoardItem>;
+                };
+                groupBy: {
+                    args: Prisma.VisionBoardItemGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.VisionBoardItemGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.VisionBoardItemCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.VisionBoardItemCountAggregateOutputType> | number;
+                };
+            };
+        };
     };
 } & {
     other: {
@@ -744,6 +894,33 @@ export declare const JournalScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type JournalScalarFieldEnum = (typeof JournalScalarFieldEnum)[keyof typeof JournalScalarFieldEnum];
+export declare const VisionBoardScalarFieldEnum: {
+    readonly id: "id";
+    readonly columns: "columns";
+    readonly rows: "rows";
+    readonly gap: "gap";
+    readonly userId: "userId";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type VisionBoardScalarFieldEnum = (typeof VisionBoardScalarFieldEnum)[keyof typeof VisionBoardScalarFieldEnum];
+export declare const VisionBoardItemScalarFieldEnum: {
+    readonly id: "id";
+    readonly row: "row";
+    readonly column: "column";
+    readonly rowSpan: "rowSpan";
+    readonly columnSpan: "columnSpan";
+    readonly type: "type";
+    readonly text: "text";
+    readonly imageUrl: "imageUrl";
+    readonly fontSize: "fontSize";
+    readonly textColor: "textColor";
+    readonly background: "background";
+    readonly boardId: "boardId";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type VisionBoardItemScalarFieldEnum = (typeof VisionBoardItemScalarFieldEnum)[keyof typeof VisionBoardItemScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";
@@ -919,6 +1096,8 @@ export type GlobalOmitConfig = {
     revision?: Prisma.RevisionOmit;
     focusSession?: Prisma.FocusSessionOmit;
     journal?: Prisma.JournalOmit;
+    visionBoard?: Prisma.VisionBoardOmit;
+    visionBoardItem?: Prisma.VisionBoardItemOmit;
 };
 export type LogLevel = 'info' | 'query' | 'warn' | 'error';
 export type LogDefinition = {

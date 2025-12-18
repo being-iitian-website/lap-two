@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.JournalScalarFieldEnum = exports.FocusSessionScalarFieldEnum = exports.RevisionScalarFieldEnum = exports.TargetScalarFieldEnum = exports.User_infoScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.VisionBoardItemScalarFieldEnum = exports.VisionBoardScalarFieldEnum = exports.JournalScalarFieldEnum = exports.FocusSessionScalarFieldEnum = exports.RevisionScalarFieldEnum = exports.TargetScalarFieldEnum = exports.User_infoScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -79,7 +79,9 @@ exports.ModelName = {
     Target: 'Target',
     Revision: 'Revision',
     FocusSession: 'FocusSession',
-    Journal: 'Journal'
+    Journal: 'Journal',
+    VisionBoard: 'VisionBoard',
+    VisionBoardItem: 'VisionBoardItem'
 };
 /*
  * Enums
@@ -148,6 +150,31 @@ exports.JournalScalarFieldEnum = {
     notes: 'notes',
     userId: 'userId',
     targetId: 'targetId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.VisionBoardScalarFieldEnum = {
+    id: 'id',
+    columns: 'columns',
+    rows: 'rows',
+    gap: 'gap',
+    userId: 'userId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.VisionBoardItemScalarFieldEnum = {
+    id: 'id',
+    row: 'row',
+    column: 'column',
+    rowSpan: 'rowSpan',
+    columnSpan: 'columnSpan',
+    type: 'type',
+    text: 'text',
+    imageUrl: 'imageUrl',
+    fontSize: 'fontSize',
+    textColor: 'textColor',
+    background: 'background',
+    boardId: 'boardId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };

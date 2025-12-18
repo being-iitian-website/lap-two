@@ -56,6 +56,7 @@ model User_info {
   revisions  Revision[] 
   focusSessions  FocusSession[]
   journals       Journal[]
+  visionBoards   VisionBoard[]
 }
 
 
@@ -137,4 +138,43 @@ model Journal {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+
+model VisionBoard {
+  id        String   @id @default(uuid())
+  columns   Int
+  rows      Int
+  gap       Int
+
+  userId    String
+  user      User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items     VisionBoardItem[]
+}
+
+model VisionBoardItem {
+  id           String  @id @default(uuid())
+
+  row          Int
+  column       Int
+  rowSpan      Int     @default(1)
+  columnSpan   Int     @default(1)
+
+  type         String  // "text" | "image"
+  text         String?
+  imageUrl     String?
+
+  fontSize     Int?
+  textColor    String?
+  background   String?
+
+  boardId      String
+  board        VisionBoard @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

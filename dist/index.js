@@ -33,7 +33,7 @@ app.use("/api/auth", auth_routes_1.default);
 app.use("/api/targets", target_routes_1.default);
 app.use("/api/revisions", revision_routes_1.default);
 app.use("/api/focus", focus_routes_1.default);
-app.use("/api/journal", space_routes_1.default);
+app.use("/api/yourspace", space_routes_1.default);
 app.use("/api/performance", performance_routes_1.default);
 const server = app.listen(port, () => {
     // eslint-disable-next-line no-console

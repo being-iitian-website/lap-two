@@ -46,6 +46,8 @@ export declare const ModelName: {
     readonly Revision: "Revision";
     readonly FocusSession: "FocusSession";
     readonly Journal: "Journal";
+    readonly VisionBoard: "VisionBoard";
+    readonly VisionBoardItem: "VisionBoardItem";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -121,6 +123,33 @@ export declare const JournalScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type JournalScalarFieldEnum = (typeof JournalScalarFieldEnum)[keyof typeof JournalScalarFieldEnum];
+export declare const VisionBoardScalarFieldEnum: {
+    readonly id: "id";
+    readonly columns: "columns";
+    readonly rows: "rows";
+    readonly gap: "gap";
+    readonly userId: "userId";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type VisionBoardScalarFieldEnum = (typeof VisionBoardScalarFieldEnum)[keyof typeof VisionBoardScalarFieldEnum];
+export declare const VisionBoardItemScalarFieldEnum: {
+    readonly id: "id";
+    readonly row: "row";
+    readonly column: "column";
+    readonly rowSpan: "rowSpan";
+    readonly columnSpan: "columnSpan";
+    readonly type: "type";
+    readonly text: "text";
+    readonly imageUrl: "imageUrl";
+    readonly fontSize: "fontSize";
+    readonly textColor: "textColor";
+    readonly background: "background";
+    readonly boardId: "boardId";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type VisionBoardItemScalarFieldEnum = (typeof VisionBoardItemScalarFieldEnum)[keyof typeof VisionBoardItemScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";
