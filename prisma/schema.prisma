@@ -58,6 +58,7 @@ model User_info {
   focusSessions  FocusSession[]
   journals       Journal[]
   visionBoards   VisionBoard[]
+  wellness DailyWellness[]
 }
 
 
@@ -178,4 +179,27 @@ model VisionBoardItem {
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+
+model DailyWellness {
+  id               String   @id @default(uuid())
+  date             DateTime
+
+  sleptAt          DateTime?
+  actualSleepTime  DateTime?
+  actualWakeTime   DateTime?
+
+  exerciseDone     Boolean  @default(false)
+  meditationDone   Boolean  @default(false)
+
+  waterIntakeMl    Int?     
+
+  userId           String
+  user             User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([userId, date])
 }
