@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "fulltest": "npm run lint && npm run format",
+    "postinstall": "prisma generate",
     "build": "npx prisma generate && tsc",
     "start": "node dist/api/index.js",
     "watch": "tsc -w",
