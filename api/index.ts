@@ -1,5 +1,4 @@
-// api/index.ts
 import serverless from "serverless-http";
-import app from "../dist/app"; // app.ts compiled to dist/app.js
+import app from "../src/app";
 
-export default serverless(app);
+export const handler = serverless(app);

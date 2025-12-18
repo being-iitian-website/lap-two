@@ -14,16 +14,13 @@ dotenv.config();
 
 const app = express();
 
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Security
 app.use(helmet());
 app.use(cors());
 
-// Health check route
+// Health check
 app.get("/", (_req, res) => {
   res.json({ message: "Server is running" });
 });
@@ -35,8 +32,5 @@ app.use("/api/revisions", revisionRoutes);
 app.use("/api/focus", focusRoutes);
 app.use("/api/yourspace", yourspaceRoutes);
 app.use("/api/performance", performanceRoutes);
-
-
-
 
 export default app;
