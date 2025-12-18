@@ -9,6 +9,7 @@ import revisionRoutes from "./routes/revision.routes";
 import focusRoutes from "./routes/focus.routes";
 import yourspaceRoutes from "./routes/space.routes";
 import performanceRoutes from "./routes/performance.routes";
+import dashboardRoutes from "./routes/dashboard.routes";
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use("/api/revisions", revisionRoutes);
 app.use("/api/focus", focusRoutes);
 app.use("/api/yourspace", yourspaceRoutes);
 app.use("/api/performance", performanceRoutes);
+app.use("/api", dashboardRoutes);
 
 // Start server
 const port = process.env.PORT || 5000;
