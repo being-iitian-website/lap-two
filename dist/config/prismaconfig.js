@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient({
-    log: ['query', 'info', 'warn', 'error'],
+    log: process.env.NODE_ENV === "production"
+        ? ['warn', 'error']
+        : ['query', 'info', 'warn', 'error'],
 });
 exports.default = prisma;
 //# sourceMappingURL=prismaconfig.js.map
