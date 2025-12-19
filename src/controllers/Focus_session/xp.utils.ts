@@ -9,54 +9,69 @@ export async function awardXP(
 ): Promise<boolean> {
   try {
     // Use transaction to ensure atomicity
-    const result = await (prisma as any).$transaction(async (tx: any) => {
-      // Check if XP was already awarded for this threshold today
-      const existing = await tx.dailyXPAward.findUnique({
-        where: {
-          userId_date_threshold: {
+    // Set timeout for serverless environments (5 seconds)
+    const result = await (prisma as any).$transaction(
+      async (tx: any) => {
+        // Check if XP was already awarded for this threshold today
+        const existing = await tx.dailyXPAward.findUnique({
+          where: {
+            userId_date_threshold: {
+              userId,
+              date,
+              threshold,
+            },
+          },
+        });
+
+        // If already awarded, skip
+        if (existing) {
+          // eslint-disable-next-line no-console
+          console.log(`XP already awarded for ${threshold} on ${date.toISOString()}`);
+          return false;
+        }
+
+        // Create award record
+        await tx.dailyXPAward.create({
+          data: {
             userId,
             date,
             threshold,
+            xpAmount,
           },
-        },
-      });
+        });
 
-      // If already awarded, skip
-      if (existing) {
-        return false;
+        // Update or create UserXP record
+        await tx.userXP.upsert({
+          where: { userId },
+          update: {
+            totalXP: {
+              increment: xpAmount,
+            },
+          },
+          create: {
+            userId,
+            totalXP: xpAmount,
+          },
+        });
+
+        // eslint-disable-next-line no-console
+        console.log(`XP awarded: ${xpAmount} XP for ${threshold} to user ${userId}`);
+        return true;
+      },
+      {
+        timeout: 5000, // 5 second timeout for serverless
       }
-
-      // Create award record
-      await tx.dailyXPAward.create({
-        data: {
-          userId,
-          date,
-          threshold,
-          xpAmount,
-        },
-      });
-
-      // Update or create UserXP record
-      await tx.userXP.upsert({
-        where: { userId },
-        update: {
-          totalXP: {
-            increment: xpAmount,
-          },
-        },
-        create: {
-          userId,
-          totalXP: xpAmount,
-        },
-      });
-
-      return true;
-    });
+    );
 
     return result;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(`Error awarding XP (${threshold}):`, error);
+    // Log more details for debugging in production
+    if (error instanceof Error) {
+      // eslint-disable-next-line no-console
+      console.error(`Error details: ${error.message}`, error.stack);
+    }
     return false;
   }
 }

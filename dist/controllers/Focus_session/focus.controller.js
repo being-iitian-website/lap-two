@@ -47,10 +47,17 @@ const saveFocusSession = async (req, res) => {
                 userId,
             },
         });
-        (0, xp_utils_1.checkAndAwardFocusXP)(userId, start, session.id).catch((error) => {
+        // Calculate and award XP based on daily focus time thresholds
+        // Await to ensure it completes in serverless environment (Vercel)
+        // Errors are caught so they don't break the session save
+        try {
+            await (0, xp_utils_1.checkAndAwardFocusXP)(userId, start, session.id);
+        }
+        catch (error) {
             // eslint-disable-next-line no-console
             console.error("Error awarding XP (non-blocking):", error);
-        });
+            // Continue - don't fail the request if XP awarding fails
+        }
         return res.json({ message: "Focus session saved successfully" });
     }
     catch (error) {
