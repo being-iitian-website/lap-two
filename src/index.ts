@@ -34,7 +34,7 @@ app.use("/api/revisions", revisionRoutes);
 app.use("/api/focus", focusRoutes);
 app.use("/api/yourspace", yourspaceRoutes);
 app.use("/api/performance", performanceRoutes);
-app.use("/api", dashboardRoutes); 
+app.use("/api/dashboard", dashboardRoutes); 
 app.use("/api", nonacademicRoutes);
 
 // Start server

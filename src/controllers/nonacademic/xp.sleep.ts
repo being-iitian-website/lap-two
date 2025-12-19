@@ -30,18 +30,34 @@ async function calculateExerciseStreak(
       endOfDay.setDate(endOfDay.getDate() + 1);
       
       // Get wellness record for this day
-      const wellness = await (prisma as any).dailyWellness.findFirst({
+      // Try unique constraint first, then fallback to range query
+      let wellness = await (prisma as any).dailyWellness.findUnique({
         where: {
-          userId,
-          date: {
-            gte: startOfDay,
-            lt: endOfDay,
+          userId_date: {
+            userId,
+            date: startOfDay,
           },
         },
         select: {
           exerciseDone: true,
         },
       });
+      
+      // Fallback to range query if unique constraint doesn't match
+      if (!wellness) {
+        wellness = await (prisma as any).dailyWellness.findFirst({
+          where: {
+            userId,
+            date: {
+              gte: startOfDay,
+              lt: endOfDay,
+            },
+          },
+          select: {
+            exerciseDone: true,
+          },
+        });
+      }
       
       // If no record or exercise not done, break the streak
       if (!wellness || !wellness.exerciseDone) {
@@ -88,18 +104,34 @@ async function calculateMeditationStreak(
       endOfDay.setDate(endOfDay.getDate() + 1);
       
       // Get wellness record for this day
-      const wellness = await (prisma as any).dailyWellness.findFirst({
+      // Try unique constraint first, then fallback to range query
+      let wellness = await (prisma as any).dailyWellness.findUnique({
         where: {
-          userId,
-          date: {
-            gte: startOfDay,
-            lt: endOfDay,
+          userId_date: {
+            userId,
+            date: startOfDay,
           },
         },
         select: {
           meditationDone: true,
         },
       });
+      
+      // Fallback to range query if unique constraint doesn't match
+      if (!wellness) {
+        wellness = await (prisma as any).dailyWellness.findFirst({
+          where: {
+            userId,
+            date: {
+              gte: startOfDay,
+              lt: endOfDay,
+            },
+          },
+          select: {
+            meditationDone: true,
+          },
+        });
+      }
       
       // If no record or meditation not done, break the streak
       if (!wellness || !wellness.meditationDone) {
@@ -317,39 +349,74 @@ export async function checkAndAwardExerciseXP(
     const normalizedDate = new Date(date);
     normalizedDate.setHours(0, 0, 0, 0);
     
-    // Get today's wellness record
-    const wellness = await (prisma as any).dailyWellness.findFirst({
+    // Get today's wellness record using unique constraint for better accuracy
+    let wellness = await (prisma as any).dailyWellness.findUnique({
       where: {
-        userId,
-        date: normalizedDate,
+        userId_date: {
+          userId,
+          date: normalizedDate,
+        },
       },
       select: {
         exerciseDone: true,
       },
     });
     
+    // Fallback to range query if unique constraint doesn't match
+    if (!wellness) {
+      const nextDay = new Date(normalizedDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      
+      wellness = await (prisma as any).dailyWellness.findFirst({
+        where: {
+          userId,
+          date: {
+            gte: normalizedDate,
+            lt: nextDay,
+          },
+        },
+        select: {
+          exerciseDone: true,
+        },
+      });
+    }
+    
     // If exercise not done today, skip
     if (!wellness || !wellness.exerciseDone) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `Exercise XP skipped for user ${userId} on ${normalizedDate.toISOString()}: ` +
+          `wellness=${!!wellness}, exerciseDone=${wellness?.exerciseDone || false}`
+      );
       return;
     }
     
     // Award daily exercise XP (+10) - only once per day
+    // eslint-disable-next-line no-console
+    console.log(`Awarding daily exercise XP: ${10} XP to user ${userId} on ${normalizedDate.toISOString()}`);
     await awardXP(userId, normalizedDate, "exercise_daily", 10);
     
     // Calculate current exercise streak
     const currentStreak = await calculateExerciseStreak(userId, normalizedDate);
     
     // eslint-disable-next-line no-console
-    console.log(`Exercise streak for user ${userId} on ${normalizedDate.toISOString()}: ${currentStreak} days`);
+    console.log(
+      `Exercise streak for user ${userId} on ${normalizedDate.toISOString()}: ${currentStreak} days`
+    );
     
     // Calculate previous streak (for threshold crossing)
     const previousStreak = currentStreak > 0 ? currentStreak - 1 : 0;
+    
+    // eslint-disable-next-line no-console
+    console.log(
+      `Exercise XP threshold check: previous=${previousStreak}, current=${currentStreak}`
+    );
     
     // Check 5-day exercise streak threshold
     // Award if: previous < 5 AND current >= 5
     if (previousStreak < 5 && currentStreak >= 5) {
       // eslint-disable-next-line no-console
-      console.log(`Awarding 5-day exercise streak XP to user ${userId}`);
+      console.log(`Awarding 5-day exercise streak XP: ${25} XP to user ${userId}`);
       await awardXP(userId, normalizedDate, "exercise_5day", 25);
     }
   } catch (error) {
@@ -376,39 +443,74 @@ export async function checkAndAwardMeditationXP(
     const normalizedDate = new Date(date);
     normalizedDate.setHours(0, 0, 0, 0);
     
-    // Get today's wellness record
-    const wellness = await (prisma as any).dailyWellness.findFirst({
+    // Get today's wellness record using unique constraint for better accuracy
+    let wellness = await (prisma as any).dailyWellness.findUnique({
       where: {
-        userId,
-        date: normalizedDate,
+        userId_date: {
+          userId,
+          date: normalizedDate,
+        },
       },
       select: {
         meditationDone: true,
       },
     });
     
+    // Fallback to range query if unique constraint doesn't match
+    if (!wellness) {
+      const nextDay = new Date(normalizedDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      
+      wellness = await (prisma as any).dailyWellness.findFirst({
+        where: {
+          userId,
+          date: {
+            gte: normalizedDate,
+            lt: nextDay,
+          },
+        },
+        select: {
+          meditationDone: true,
+        },
+      });
+    }
+    
     // If meditation not done today, skip
     if (!wellness || !wellness.meditationDone) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `Meditation XP skipped for user ${userId} on ${normalizedDate.toISOString()}: ` +
+          `wellness=${!!wellness}, meditationDone=${wellness?.meditationDone || false}`
+      );
       return;
     }
     
     // Award daily meditation XP (+10) - only once per day
+    // eslint-disable-next-line no-console
+    console.log(`Awarding daily meditation XP: ${10} XP to user ${userId} on ${normalizedDate.toISOString()}`);
     await awardXP(userId, normalizedDate, "meditation_daily", 10);
     
     // Calculate current meditation streak
     const currentStreak = await calculateMeditationStreak(userId, normalizedDate);
     
     // eslint-disable-next-line no-console
-    console.log(`Meditation streak for user ${userId} on ${normalizedDate.toISOString()}: ${currentStreak} days`);
+    console.log(
+      `Meditation streak for user ${userId} on ${normalizedDate.toISOString()}: ${currentStreak} days`
+    );
     
     // Calculate previous streak (for threshold crossing)
     const previousStreak = currentStreak > 0 ? currentStreak - 1 : 0;
+    
+    // eslint-disable-next-line no-console
+    console.log(
+      `Meditation XP threshold check: previous=${previousStreak}, current=${currentStreak}`
+    );
     
     // Check 5-day meditation streak threshold
     // Award if: previous < 5 AND current >= 5
     if (previousStreak < 5 && currentStreak >= 5) {
       // eslint-disable-next-line no-console
-      console.log(`Awarding 5-day meditation streak XP to user ${userId}`);
+      console.log(`Awarding 5-day meditation streak XP: ${25} XP to user ${userId}`);
       await awardXP(userId, normalizedDate, "meditation_5day", 25);
     }
   } catch (error) {

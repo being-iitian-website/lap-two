@@ -35,7 +35,7 @@ app.use("/api/revisions", revision_routes_1.default);
 app.use("/api/focus", focus_routes_1.default);
 app.use("/api/yourspace", space_routes_1.default);
 app.use("/api/performance", performance_routes_1.default);
-app.use("/api", dashboard_routes_1.default);
+app.use("/api/dashboard", dashboard_routes_1.default);
 app.use("/api", nonacademic_routes_1.default);
 // Start server
 const port = process.env.PORT || 5000;
