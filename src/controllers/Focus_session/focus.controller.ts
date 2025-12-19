@@ -2,6 +2,7 @@ import type { Response } from "express";
 
 import prisma from "../../config/prismaconfig";
 import type { AuthenticatedRequest } from "../../middleware/auth.middleware";
+import { checkAndAwardFocusXP } from "./xp.utils";
 
 interface SaveFocusSessionBody {
   notes?: string;
@@ -51,7 +52,8 @@ export const saveFocusSession = async (
     const durationMs = end.getTime() - start.getTime();
     const durationMinutes = Math.round(durationMs / (1000 * 60));
 
-    await (prisma as any).focusSession.create({
+    // Create focus session
+    const session = await (prisma as any).focusSession.create({
       data: {
         notes: notes || null,
         startTime: start,
@@ -59,6 +61,12 @@ export const saveFocusSession = async (
         duration: durationMinutes,
         userId,
       },
+    });
+
+   
+    checkAndAwardFocusXP(userId, start, session.id).catch((error) => {
+      // eslint-disable-next-line no-console
+      console.error("Error awarding XP (non-blocking):", error);
     });
 
     return res.json({ message: "Focus session saved successfully" });

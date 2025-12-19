@@ -59,6 +59,8 @@ model User_info {
   journals       Journal[]
   visionBoards   VisionBoard[]
   wellness DailyWellness[]
+  xpRecord      UserXP?
+  dailyXPAwards DailyXPAward[]
 }
 
 
@@ -203,3 +205,30 @@ model DailyWellness {
 
   @@unique([userId, date])
 }
+
+model UserXP {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  totalXP   Int      @default(0)
+
+  user      User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DailyXPAward {
+  id        String   @id @default(uuid())
+  userId    String
+  date      DateTime
+  threshold String   // "focus_7h" or "focus_11h"
+  xpAmount  Int      // 15 or 30
+
+  user      User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, date, threshold])
+  @@index([userId, date])
+}
+

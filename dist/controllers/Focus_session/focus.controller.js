@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecentFocusSessions = exports.saveFocusSession = void 0;
 const prismaconfig_1 = __importDefault(require("../../config/prismaconfig"));
+const xp_utils_1 = require("./xp.utils");
 /**
  * SAVE FOCUS SESSION
  * POST /api/focus
@@ -36,7 +37,8 @@ const saveFocusSession = async (req, res) => {
         // Duration in minutes
         const durationMs = end.getTime() - start.getTime();
         const durationMinutes = Math.round(durationMs / (1000 * 60));
-        await prismaconfig_1.default.focusSession.create({
+        // Create focus session
+        const session = await prismaconfig_1.default.focusSession.create({
             data: {
                 notes: notes || null,
                 startTime: start,
@@ -44,6 +46,10 @@ const saveFocusSession = async (req, res) => {
                 duration: durationMinutes,
                 userId,
             },
+        });
+        (0, xp_utils_1.checkAndAwardFocusXP)(userId, start, session.id).catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error("Error awarding XP (non-blocking):", error);
         });
         return res.json({ message: "Focus session saved successfully" });
     }
