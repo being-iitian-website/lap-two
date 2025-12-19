@@ -384,7 +384,14 @@ GET {{base_url}}/api/performance/hours/type?range=30
    - Call `GET /api/performance/hours/subject` → verify subject breakdown
    - Call `GET /api/performance/hours/type` → verify theory vs solving breakdown
 
-5. **Test Different Ranges**:
+5. **Test Routine Endpoints**:
+   - Call `GET /api/performance/routine/sleep` → verify day-wise sleep data (default 7 days)
+   - Call `GET /api/performance/routine/sleep?range=30` → verify last 30 days sleep data
+   - Call `GET /api/performance/routine/health` → verify day-wise health activity data (default 7 days)
+   - Call `GET /api/performance/routine/health?range=90` → verify last 90 days health data
+   - Test with different ranges (7, 30, 90) to verify date range behavior
+
+6. **Test Different Ranges**:
    - Test with `?range=7`, `?range=30`, and `?range=90`
    - Verify results change based on date range
 
@@ -427,6 +434,12 @@ if (pm.response.code === 200 || pm.response.code === 201) {
 - [ ] Test GET /api/performance/hours/total
 - [ ] Test GET /api/performance/hours/subject
 - [ ] Test GET /api/performance/hours/type
+- [ ] Track sleep data via POST /api/wellness/sleep
+- [ ] Track exercise/meditation via POST /api/wellness/activity
+- [ ] Test GET /api/performance/routine/sleep (default range)
+- [ ] Test GET /api/performance/routine/sleep?range=30
+- [ ] Test GET /api/performance/routine/health (default range)
+- [ ] Test GET /api/performance/routine/health?range=90
 - [ ] Test invalid range parameter (should fail)
 - [ ] Test without authentication (should fail)
 - [ ] Verify user isolation (only own data is returned)
@@ -442,6 +455,228 @@ if (pm.response.code === 200 || pm.response.code === 201) {
 5. **Rounding**: Hours are rounded to 1 decimal place for display
 6. **Sorting**: Subject-wise results are sorted by count/hours in descending order
 7. **Type Filter**: Hours by type only includes `"theory"` and `"solving"` types (excludes `"lecture"`, `"revision"`, `"mock"`)
+8. **Routine Date Range**: Sleep and health routines return data for the last N days (7, 30, or 90) from today, calculated backwards
+9. **Routine Data Completeness**: All days in the range are included, with `null` or `false` values for days without data
+10. **Sleep Duration**: Requires `actualSleepTime` and `actualWakeTime` to calculate `sleepDurationMin`
+11. **Range Parameter**: Both routine endpoints support `?range=7|30|90` query parameter (default: 7 days)
+
+---
+
+## 6. Sleep Routine (Range-based)
+
+### Endpoint
+
+- `GET {{base_url}}/api/performance/routine/sleep?range=7|30|90`
+
+### Headers
+
+```text
+Authorization: Bearer {{jwt_token}}
+```
+
+### Query Parameters (Optional)
+
+- `range`: `7`, `30`, or `90` (default: `7`)
+
+### Purpose
+
+To retrieve day-wise sleep duration for the last N days (7, 30, or 90 days).
+
+### Business Rules
+
+- Data is fetched only for the authenticated user
+- Each day returns a single record
+- If no sleep data exists for a day, `durationMin` is returned as `null`
+- Sleep duration is expressed in minutes
+- Date range: Last N days from today (calculated backwards)
+
+### Example Requests
+
+**Default (7 days)**:
+```
+GET {{base_url}}/api/performance/routine/sleep
+```
+
+**Last 30 days**:
+```
+GET {{base_url}}/api/performance/routine/sleep?range=30
+```
+
+**Last 90 days**:
+```
+GET {{base_url}}/api/performance/routine/sleep?range=90
+```
+
+### Expected Response (200 OK)
+
+```json
+{
+  "data": [
+    {
+      "date": "2025-12-18",
+      "durationMin": 480
+    },
+    {
+      "date": "2025-12-19",
+      "durationMin": null
+    },
+    {
+      "date": "2025-12-20",
+      "durationMin": 525
+    }
+  ]
+}
+```
+
+### Response Fields
+
+**Root Object:**
+- `data` (array): Array of day-wise sleep records
+
+**Data Array:**
+Each object contains:
+- `date` (string): Date in YYYY-MM-DD format
+- `durationMin` (number | null): Sleep duration in minutes, or `null` if no sleep data exists for that day
+
+### Error Responses
+
+- **400 Bad Request - Invalid Range**
+  ```json
+  {
+    "message": "Invalid range. Must be 7, 30, or 90 days"
+  }
+  ```
+
+- **401 Unauthorized**
+  - Missing or invalid `Authorization` header
+
+- **500 Internal Server Error**
+  ```json
+  {
+    "message": "Failed to fetch sleep routine"
+  }
+  ```
+
+### Test Cases
+
+1. **Valid Request (default range)**: Call without `range` param → expect 200 with "last 7 days" data
+2. **Valid Request (30 days)**: Call with `?range=30` → expect 200 with "last 30 days" data
+3. **Valid Request (90 days)**: Call with `?range=90` → expect 200 with "last 90 days" data
+4. **Invalid Range**: Call with `?range=15` → expect 400 Bad Request
+5. **Missing Token**: Remove Authorization header → expect 401 Unauthorized
+6. **No Sleep Data**: If user has no sleep records → expect 200 with array of null values
+
+---
+
+## 7. Health Routine (Range-based)
+
+### Endpoint
+
+- `GET {{base_url}}/api/performance/routine/health?range=7|30|90`
+
+### Headers
+
+```text
+Authorization: Bearer {{jwt_token}}
+```
+
+### Query Parameters (Optional)
+
+- `range`: `7`, `30`, or `90` (default: `7`)
+
+### Purpose
+
+To retrieve day-wise health activity status (exercise & meditation) for the last N days (7, 30, or 90 days).
+
+### Business Rules
+
+- Data is fetched only for the authenticated user
+- Each day returns a single record
+- If no wellness data exists for a day, both `exercise` and `meditation` are returned as `false`
+- Date range: Last N days from today (calculated backwards)
+
+### Example Requests
+
+**Default (7 days)**:
+```
+GET {{base_url}}/api/performance/routine/health
+```
+
+**Last 30 days**:
+```
+GET {{base_url}}/api/performance/routine/health?range=30
+```
+
+**Last 90 days**:
+```
+GET {{base_url}}/api/performance/routine/health?range=90
+```
+
+### Expected Response (200 OK)
+
+```json
+{
+  "data": [
+    {
+      "date": "2025-12-18",
+      "exercise": true,
+      "meditation": false
+    },
+    {
+      "date": "2025-12-19",
+      "exercise": false,
+      "meditation": false
+    },
+    {
+      "date": "2025-12-20",
+      "exercise": true,
+      "meditation": true
+    }
+  ]
+}
+```
+
+### Response Fields
+
+**Root Object:**
+- `data` (array): Array of day-wise health activity records
+
+**Data Array:**
+Each object contains:
+- `date` (string): Date in YYYY-MM-DD format
+- `exercise` (boolean): `true` if exercise was done, `false` otherwise
+- `meditation` (boolean): `true` if meditation was done, `false` otherwise
+
+### Error Responses
+
+- **400 Bad Request - Invalid Range**
+  ```json
+  {
+    "message": "Invalid range. Must be 7, 30, or 90 days"
+  }
+  ```
+
+- **401 Unauthorized**
+  - Missing or invalid `Authorization` header
+
+- **500 Internal Server Error**
+  ```json
+  {
+    "message": "Failed to fetch health routine"
+  }
+  ```
+
+### Test Cases
+
+1. **Valid Request (default range)**: Call without `range` param → expect 200 with "last 7 days" data
+2. **Valid Request (30 days)**: Call with `?range=30` → expect 200 with "last 30 days" data
+3. **Valid Request (90 days)**: Call with `?range=90` → expect 200 with "last 90 days" data
+4. **Invalid Range**: Call with `?range=15` → expect 400 Bad Request
+5. **Missing Token**: Remove Authorization header → expect 401 Unauthorized
+6. **No Health Data**: If user has no wellness records → expect 200 with array of false values
+7. **Exercise Only**: Track exercise but not meditation → verify `exercise: true, meditation: false`
+8. **Meditation Only**: Track meditation but not exercise → verify `exercise: false, meditation: true`
+9. **Both Activities**: Track both exercise and meditation → verify both are `true`
 
 ---
 
@@ -465,4 +700,20 @@ if (pm.response.code === 200 || pm.response.code === 201) {
 - Check if token is correctly copied
 - Token might have expired (7 days)
 - Re-login to get a new token
+
+### Issue: Sleep/Health Routine returns empty array or all null/false values
+**Solution**: 
+- Verify wellness data has been tracked via `POST /api/wellness/sleep` or `POST /api/wellness/activity`
+- Check that wellness data was created within the selected date range (last 7, 30, or 90 days)
+- Ensure you're using the correct user's token
+- Try increasing the range (e.g., `?range=30` or `?range=90`) to see if data exists in a longer period
+
+### Issue: Sleep duration is null for days with sleep data
+**Solution**: 
+- Verify sleep data was saved with `actualSleepTime` and `actualWakeTime` (required to calculate `sleepDurationMin`)
+- Check that sleep data exists in the database for those dates
+- Ensure dates match exactly (time is normalized to start of day)
+
+### Issue: "Invalid range. Must be 7, 30, or 90 days"
+**Solution**: Ensure the `range` query parameter is exactly `7`, `30`, or `90`
 
