@@ -192,6 +192,8 @@ model DailyWellness {
   actualSleepTime  DateTime?
   actualWakeTime   DateTime?
 
+  sleepDurationMin Int?      // Sleep duration in minutes (420-540 = 7-9 hours)
+
   exerciseDone     Boolean  @default(false)
   meditationDone   Boolean  @default(false)
 
