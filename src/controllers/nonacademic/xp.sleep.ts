@@ -134,6 +134,9 @@ async function calculateSleepStreak(
     let streak = 0;
     let currentDate = new Date(endDate);
     
+    // Normalize endDate to start of day for consistent comparison
+    currentDate.setHours(0, 0, 0, 0);
+    
     // Check backwards from endDate until we find a day without valid sleep
     while (true) {
       const startOfDay = new Date(currentDate);
@@ -143,21 +146,45 @@ async function calculateSleepStreak(
       endOfDay.setDate(endOfDay.getDate() + 1);
       
       // Get wellness record for this day
-      const wellness = await (prisma as any).dailyWellness.findFirst({
+      // Try unique constraint first, then fallback to range query
+      let wellness = await (prisma as any).dailyWellness.findUnique({
         where: {
-          userId,
-          date: {
-            gte: startOfDay,
-            lt: endOfDay,
+          userId_date: {
+            userId,
+            date: startOfDay,
           },
         },
         select: {
           sleepDurationMin: true,
+          date: true,
         },
       });
       
+      // Fallback to range query if unique constraint doesn't match
+      if (!wellness) {
+        wellness = await (prisma as any).dailyWellness.findFirst({
+          where: {
+            userId,
+            date: {
+              gte: startOfDay,
+              lt: endOfDay,
+            },
+          },
+          select: {
+            sleepDurationMin: true,
+            date: true,
+          },
+        });
+      }
+      
       // If no record or invalid sleep, break the streak
       if (!wellness || !isValidSleepDuration(wellness.sleepDurationMin)) {
+        // eslint-disable-next-line no-console
+        console.log(
+          `Sleep streak broken at ${startOfDay.toISOString()}: ` +
+            `wellness=${!!wellness}, ` +
+            `sleepDurationMin=${wellness?.sleepDurationMin || "null"}`
+        );
         break;
       }
       
@@ -176,6 +203,10 @@ async function calculateSleepStreak(
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Error calculating sleep streak:", error);
+    if (error instanceof Error) {
+      // eslint-disable-next-line no-console
+      console.error(`Error details: ${error.message}`, error.stack);
+    }
     return 0;
   }
 }
@@ -191,30 +222,37 @@ export async function checkAndAwardSleepXP(
     normalizedDate.setHours(0, 0, 0, 0);
     
     // Get today's sleep record to verify it has valid sleep
-    // Use exact date match first, then fallback to range if needed
-    const todayWellness = await (prisma as any).dailyWellness.findFirst({
+    // Use unique constraint first for better performance and accuracy
+    let wellness = await (prisma as any).dailyWellness.findUnique({
       where: {
-        userId,
-        date: normalizedDate,
-      },
-      select: {
-        sleepDurationMin: true,
-      },
-    });
-    
-    // If exact match fails, try date range query (for timezone edge cases)
-    const wellness = todayWellness || await (prisma as any).dailyWellness.findFirst({
-      where: {
-        userId,
-        date: {
-          gte: normalizedDate,
-          lt: new Date(normalizedDate.getTime() + 24 * 60 * 60 * 1000),
+        userId_date: {
+          userId,
+          date: normalizedDate,
         },
       },
       select: {
         sleepDurationMin: true,
       },
     });
+    
+    // Fallback to range query if unique constraint doesn't match (timezone edge cases)
+    if (!wellness) {
+      const nextDay = new Date(normalizedDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      
+      wellness = await (prisma as any).dailyWellness.findFirst({
+        where: {
+          userId,
+          date: {
+            gte: normalizedDate,
+            lt: nextDay,
+          },
+        },
+        select: {
+          sleepDurationMin: true,
+        },
+      });
+    }
     
     
     if (!wellness || !isValidSleepDuration(wellness.sleepDurationMin)) {
@@ -223,26 +261,35 @@ export async function checkAndAwardSleepXP(
       return;
     }
     
-    // Calculate current streak
+    // Calculate current streak (includes today)
     const currentStreak = await calculateSleepStreak(userId, normalizedDate);
     
     // eslint-disable-next-line no-console
-    console.log(`Sleep streak for user ${userId} on ${normalizedDate.toISOString()}: ${currentStreak} days`);
+    console.log(
+      `Sleep streak for user ${userId} on ${normalizedDate.toISOString()}: ` +
+        `${currentStreak} days (sleepDurationMin: ${wellness.sleepDurationMin})`
+    );
     
-    
+    // Calculate previous streak (before today was added)
+    // If current streak is N, previous was N-1 (assuming today is valid)
     const previousStreak = currentStreak > 0 ? currentStreak - 1 : 0;
     
+    // eslint-disable-next-line no-console
+    console.log(
+      `Sleep XP threshold check: previous=${previousStreak}, current=${currentStreak}`
+    );
     
+    // Check 7-day threshold: Award if previous < 7 AND current >= 7
     if (previousStreak < 7 && currentStreak >= 7) {
       // eslint-disable-next-line no-console
-      console.log(`Awarding 7-day sleep streak XP to user ${userId}`);
+      console.log(`Awarding 7-day sleep streak XP: ${25} XP to user ${userId}`);
       await awardXP(userId, normalizedDate, "sleep_7day", 25);
     }
     
-   
+    // Check 21-day threshold: Award if previous < 21 AND current >= 21
     if (previousStreak < 21 && currentStreak >= 21) {
       // eslint-disable-next-line no-console
-      console.log(`Awarding 21-day sleep streak XP to user ${userId}`);
+      console.log(`Awarding 21-day sleep streak XP: ${100} XP to user ${userId}`);
       await awardXP(userId, normalizedDate, "sleep_21day", 100);
     }
   } catch (error) {

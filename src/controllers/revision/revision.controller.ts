@@ -2,6 +2,7 @@ import type { Response } from "express";
 
 import prisma from "../../config/prismaconfig";
 import type { AuthenticatedRequest } from "../../middleware/auth.middleware";
+import { checkAndAwardRevisionXP } from "./xp.revision";
 
 // Enum types matching Prisma schema
 type RevisionStatus = "pending" | "completed" | "missed";
@@ -233,6 +234,18 @@ export const updateRevisionStatus = async (
         status: "completed",
       },
     });
+
+    // ✅ XP awarding (non-blocking) - Check and award revision XP
+    try {
+      await checkAndAwardRevisionXP(userId, id);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("Revision XP error:", err);
+      if (err instanceof Error) {
+        // eslint-disable-next-line no-console
+        console.error(`Revision XP error details: ${err.message}`, err.stack);
+      }
+    }
 
     return res.json({
       message: "Revision marked as completed",

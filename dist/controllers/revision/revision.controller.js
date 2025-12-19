@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateRevisionStatus = exports.getRevisionsByDate = exports.createRevision = exports.updateMissedRevisions = void 0;
 const prismaconfig_1 = __importDefault(require("../../config/prismaconfig"));
+const xp_revision_1 = require("./xp.revision");
 // Export helper function for use in other revision controllers
 const updateMissedRevisions = async (userId) => {
     const now = new Date();
@@ -184,6 +185,18 @@ const updateRevisionStatus = async (req, res) => {
                 status: "completed",
             },
         });
+        // ✅ XP awarding (non-blocking) - Check and award revision XP
+        try {
+            await (0, xp_revision_1.checkAndAwardRevisionXP)(userId, id);
+        }
+        catch (err) {
+            // eslint-disable-next-line no-console
+            console.error("Revision XP error:", err);
+            if (err instanceof Error) {
+                // eslint-disable-next-line no-console
+                console.error(`Revision XP error details: ${err.message}`, err.stack);
+            }
+        }
         return res.json({
             message: "Revision marked as completed",
             revision: {
