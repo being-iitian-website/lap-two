@@ -170,34 +170,73 @@ async function checkAndAwardWeeklyCompletionXP(
       (r: { status: string }) => r.status === "completed"
     ).length;
 
+    // Count by status for debugging
+    const statusCounts = plannedRevisions.reduce(
+      (acc: Record<string, number>, r: { status: string }) => {
+        acc[r.status] = (acc[r.status] || 0) + 1;
+        return acc;
+      },
+      {}
+    );
+
     // eslint-disable-next-line no-console
     console.log(
-      `Weekly XP check for user ${userId}, week ${weekId}: ` +
-        `planned=${plannedCount}, completed=${completedCount}`
+      `Weekly XP check for user ${userId}, week ${weekId} (${startOfWeek.toISOString()} to ${startOfNextWeek.toISOString()}): ` +
+        `planned=${plannedCount}, completed=${completedCount}, ` +
+        `statuses=${JSON.stringify(statusCounts)}`
     );
 
     // Check conditions:
     // 1. At least 5 planned revisions
     // 2. All planned revisions are completed
-    if (plannedCount >= 5 && completedCount === plannedCount) {
-      // Check if XP was already awarded this week (threshold crossing logic)
-      // We need to check if it was incomplete before this revision was completed
-      const previousCompletedCount = completedCount - 1;
-      const wasIncomplete = previousCompletedCount < plannedCount;
+    if (plannedCount < 5) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `Weekly XP not awarded: Only ${plannedCount} planned revisions (need at least 5)`
+      );
+      return;
+    }
 
-      if (wasIncomplete) {
-        // Award weekly completion XP
-        // Use start of week date for consistency with threshold
-        const threshold = `revision_weekly_${weekId}`;
-        const awardDate = new Date(startOfWeek);
-        awardDate.setHours(0, 0, 0, 0);
+    if (completedCount !== plannedCount) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `Weekly XP not awarded: ${completedCount}/${plannedCount} revisions completed (need all completed)`
+      );
+      return;
+    }
 
-        // eslint-disable-next-line no-console
-        console.log(
-          `Awarding weekly revision completion XP: ${25} XP for week ${weekId} to user ${userId}`
-        );
-        await awardXP(userId, awardDate, threshold, 25);
-      }
+    // All conditions met - check threshold crossing
+    // Check if XP was already awarded this week (threshold crossing logic)
+    // We need to check if it was incomplete before this revision was completed
+    const previousCompletedCount = completedCount - 1;
+    const wasIncomplete = previousCompletedCount < plannedCount;
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `Weekly completion threshold check: ` +
+        `previousCompleted=${previousCompletedCount}, ` +
+        `currentCompleted=${completedCount}, ` +
+        `planned=${plannedCount}, ` +
+        `wasIncomplete=${wasIncomplete}`
+    );
+
+    if (wasIncomplete) {
+      // Award weekly completion XP
+      // Use start of week date for consistency with threshold
+      const threshold = `revision_weekly_${weekId}`;
+      const awardDate = new Date(startOfWeek);
+      awardDate.setHours(0, 0, 0, 0);
+
+      // eslint-disable-next-line no-console
+      console.log(
+        `Awarding weekly revision completion XP: ${25} XP for week ${weekId} to user ${userId}`
+      );
+      await awardXP(userId, awardDate, threshold, 25);
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(
+        `Weekly XP not awarded: Already awarded this week or not crossing threshold`
+      );
     }
   } catch (error) {
     // eslint-disable-next-line no-console
