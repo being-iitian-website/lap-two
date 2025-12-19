@@ -87,8 +87,10 @@ async function calculateJournalStreak(
 
 /**
  * Check and award XP for journal writing
- * Awards +5 XP when a journal entry has more than 50 words
- * Only awards once per day per user
+ * Awards +5 XP when a journal entry has more than 50 words (but <= 250)
+ * Awards +15 XP when a journal entry has more than 250 words
+ * Only one award per journal entry (higher threshold takes precedence)
+ * Only awards once per day per user per threshold
  * 
  * @param userId - User ID
  * @param journalId - ID of the journal entry that was just saved
@@ -134,22 +136,33 @@ export async function checkAndAwardJournalXP(
         `wordCount=${wordCount}`
     );
 
-    // Check if journal has more than 50 words
-    if (wordCount > 50) {
-      // Award journal writing XP (+5) - only once per day
-      const threshold = "journal_50words";
+    // Check word count thresholds: Higher threshold takes precedence
+    if (wordCount > 250) {
+      // Award +15 XP for >250 words (higher threshold)
+      const threshold250 = "journal_250words";
       
       // eslint-disable-next-line no-console
       console.log(
-        `Awarding journal writing XP: ${5} XP to user ${userId} ` +
+        `Awarding journal writing XP (250 words): ${15} XP to user ${userId} ` +
           `(wordCount: ${wordCount})`
       );
       
-      await awardXP(userId, normalizedDate, threshold, 5);
+      await awardXP(userId, normalizedDate, threshold250, 15);
+    } else if (wordCount > 50) {
+      // Award +5 XP for >50 words (but <= 250)
+      const threshold50 = "journal_50words";
+      
+      // eslint-disable-next-line no-console
+      console.log(
+        `Awarding journal writing XP (50 words): ${5} XP to user ${userId} ` +
+          `(wordCount: ${wordCount})`
+      );
+      
+      await awardXP(userId, normalizedDate, threshold50, 5);
     } else {
       // eslint-disable-next-line no-console
       console.log(
-        `Journal XP not awarded: wordCount=${wordCount} (need >50 words)`
+        `Journal XP not awarded: wordCount=${wordCount} (need >50 words for +5 XP, >250 words for +15 XP)`
       );
     }
 
