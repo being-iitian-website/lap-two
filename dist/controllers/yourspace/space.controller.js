@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTodayResponses = exports.getMyJournals = exports.saveJournal = void 0;
 const prismaconfig_1 = __importDefault(require("../../config/prismaconfig"));
+const xp_space_1 = require("./xp.space");
 /**
  * CREATE / UPDATE JOURNAL (Upsert-style)
  * POST /api/journal
@@ -29,6 +30,7 @@ const saveJournal = async (req, res) => {
         }
         // Normalise to start of day for date-only semantics
         parsedDate.setHours(0, 0, 0, 0);
+        let savedJournal;
         if (id) {
             // Update existing journal, ensuring it belongs to the current user
             const existing = await prismaconfig_1.default.journal.findFirst({
@@ -42,7 +44,7 @@ const saveJournal = async (req, res) => {
                     .status(404)
                     .json({ message: "Journal not found or access denied" });
             }
-            await prismaconfig_1.default.journal.update({
+            savedJournal = await prismaconfig_1.default.journal.update({
                 where: { id },
                 data: {
                     date: parsedDate,
@@ -53,7 +55,7 @@ const saveJournal = async (req, res) => {
         }
         else {
             // Create new journal entry
-            await prismaconfig_1.default.journal.create({
+            savedJournal = await prismaconfig_1.default.journal.create({
                 data: {
                     date: parsedDate,
                     notes,
@@ -61,6 +63,18 @@ const saveJournal = async (req, res) => {
                     // createdAt / updatedAt handled by Prisma
                 },
             });
+        }
+        // ✅ XP awarding (non-blocking) - Check and award journal XP
+        try {
+            await (0, xp_space_1.checkAndAwardJournalXP)(userId, savedJournal.id, parsedDate);
+        }
+        catch (err) {
+            // eslint-disable-next-line no-console
+            console.error("Journal XP error:", err);
+            if (err instanceof Error) {
+                // eslint-disable-next-line no-console
+                console.error(`Journal XP error details: ${err.message}`, err.stack);
+            }
         }
         return res.json({ message: "Journal saved successfully" });
     }

@@ -2,6 +2,7 @@ import type { Response } from "express";
 
 import prisma from "../../config/prismaconfig";
 import type { AuthenticatedRequest } from "../../middleware/auth.middleware";
+import { checkAndAwardJournalXP } from "./xp.space";
 
 interface SaveJournalBody {
   id?: string;
@@ -42,6 +43,8 @@ export const saveJournal = async (
     // Normalise to start of day for date-only semantics
     parsedDate.setHours(0, 0, 0, 0);
 
+    let savedJournal;
+    
     if (id) {
       // Update existing journal, ensuring it belongs to the current user
       const existing = await (prisma as any).journal.findFirst({
@@ -57,7 +60,7 @@ export const saveJournal = async (
           .json({ message: "Journal not found or access denied" });
       }
 
-      await (prisma as any).journal.update({
+      savedJournal = await (prisma as any).journal.update({
         where: { id },
         data: {
           date: parsedDate,
@@ -67,7 +70,7 @@ export const saveJournal = async (
       });
     } else {
       // Create new journal entry
-      await (prisma as any).journal.create({
+      savedJournal = await (prisma as any).journal.create({
         data: {
           date: parsedDate,
           notes,
@@ -75,6 +78,18 @@ export const saveJournal = async (
           // createdAt / updatedAt handled by Prisma
         },
       });
+    }
+
+    // ✅ XP awarding (non-blocking) - Check and award journal XP
+    try {
+      await checkAndAwardJournalXP(userId, savedJournal.id, parsedDate);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("Journal XP error:", err);
+      if (err instanceof Error) {
+        // eslint-disable-next-line no-console
+        console.error(`Journal XP error details: ${err.message}`, err.stack);
+      }
     }
 
     return res.json({ message: "Journal saved successfully" });
