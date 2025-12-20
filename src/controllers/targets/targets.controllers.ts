@@ -2,6 +2,7 @@ import type { Response } from "express";
 
 import prisma from "../../config/prismaconfig";
 import type { AuthenticatedRequest } from "../../middleware/auth.middleware";
+import { checkAndAwardTargetStreakXP } from "./xp.targets";
 
 // Enum types matching Prisma schema
 type TargetType = "theory" | "lecture" | "revision" | "solving" | "mock" | "challenge";
@@ -251,6 +252,24 @@ export const updateTargetStatus = async (
         ...(actualHours !== undefined && { actualHours }),
       },
     });
+
+    // ✅ XP awarding (non-blocking) - Check and award target streak XP if status is "completed"
+    if (status === "completed") {
+      try {
+        // Fire and forget - don't await to avoid blocking response
+        checkAndAwardTargetStreakXP(userId, new Date()).catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error("Target streak XP error:", err);
+          if (err instanceof Error) {
+            // eslint-disable-next-line no-console
+            console.error(`Target streak XP error details: ${err.message}`, err.stack);
+          }
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error("Target streak XP error:", err);
+      }
+    }
 
     return res.json({
       message: "Target status updated successfully",

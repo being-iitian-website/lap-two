@@ -2,7 +2,10 @@ import type { Response } from "express";
 
 import prisma from "../../config/prismaconfig";
 import type { AuthenticatedRequest } from "../../middleware/auth.middleware";
-import { checkAndAwardDailyResponseXP } from "./xp.targets";
+import {
+  checkAndAwardDailyResponseXP,
+  checkAndAwardTargetStreakXP,
+} from "./xp.targets";
 
 // Enum types matching Prisma schema
 type TargetStatus = "pending" | "completed" | "missed";
@@ -230,6 +233,23 @@ export const submitDailyResponse = async (
         // eslint-disable-next-line no-console
         console.error(`Daily response XP error details: ${err.message}`, err.stack);
       }
+    }
+
+    // ✅ XP awarding (non-blocking) - Check and award target streak XP
+    // Status is automatically set to "completed" when daily response is submitted
+    try {
+      // Fire and forget - don't await to avoid blocking response
+      checkAndAwardTargetStreakXP(userId, today).catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error("Target streak XP error:", err);
+        if (err instanceof Error) {
+          // eslint-disable-next-line no-console
+          console.error(`Target streak XP error details: ${err.message}`, err.stack);
+        }
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("Target streak XP error:", err);
     }
 
     return res.json({

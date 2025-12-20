@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTargetStatus = exports.getTodayTargets = exports.createTarget = void 0;
 const prismaconfig_1 = __importDefault(require("../../config/prismaconfig"));
+const xp_targets_1 = require("./xp.targets");
 /**
  * CREATE TARGET
  * POST /api/targets
@@ -191,6 +192,24 @@ const updateTargetStatus = async (req, res) => {
                 ...(actualHours !== undefined && { actualHours }),
             },
         });
+        // ✅ XP awarding (non-blocking) - Check and award target streak XP if status is "completed"
+        if (status === "completed") {
+            try {
+                // Fire and forget - don't await to avoid blocking response
+                (0, xp_targets_1.checkAndAwardTargetStreakXP)(userId, new Date()).catch((err) => {
+                    // eslint-disable-next-line no-console
+                    console.error("Target streak XP error:", err);
+                    if (err instanceof Error) {
+                        // eslint-disable-next-line no-console
+                        console.error(`Target streak XP error details: ${err.message}`, err.stack);
+                    }
+                });
+            }
+            catch (err) {
+                // eslint-disable-next-line no-console
+                console.error("Target streak XP error:", err);
+            }
+        }
         return res.json({
             message: "Target status updated successfully",
             target: {

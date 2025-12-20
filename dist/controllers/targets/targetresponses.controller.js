@@ -178,6 +178,23 @@ const submitDailyResponse = async (req, res) => {
                 console.error(`Daily response XP error details: ${err.message}`, err.stack);
             }
         }
+        // ✅ XP awarding (non-blocking) - Check and award target streak XP
+        // Status is automatically set to "completed" when daily response is submitted
+        try {
+            // Fire and forget - don't await to avoid blocking response
+            (0, xp_targets_1.checkAndAwardTargetStreakXP)(userId, today).catch((err) => {
+                // eslint-disable-next-line no-console
+                console.error("Target streak XP error:", err);
+                if (err instanceof Error) {
+                    // eslint-disable-next-line no-console
+                    console.error(`Target streak XP error details: ${err.message}`, err.stack);
+                }
+            });
+        }
+        catch (err) {
+            // eslint-disable-next-line no-console
+            console.error("Target streak XP error:", err);
+        }
         return res.json({
             message: "Daily response submitted successfully",
             target: {
