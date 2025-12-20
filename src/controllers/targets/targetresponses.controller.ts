@@ -2,6 +2,7 @@ import type { Response } from "express";
 
 import prisma from "../../config/prismaconfig";
 import type { AuthenticatedRequest } from "../../middleware/auth.middleware";
+import { checkAndAwardDailyResponseXP } from "./xp.targets";
 
 // Enum types matching Prisma schema
 type TargetStatus = "pending" | "completed" | "missed";
@@ -211,6 +212,25 @@ export const submitDailyResponse = async (
         status: "completed" as TargetStatus, // Set status to completed when response is submitted
       },
     });
+
+    // ✅ XP awarding (non-blocking) - Check and award XP for answering 2 questions
+    try {
+      await checkAndAwardDailyResponseXP(
+        userId,
+        today,
+        question1,
+        answer1,
+        question2,
+        answer2
+      );
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("Daily response XP error:", err);
+      if (err instanceof Error) {
+        // eslint-disable-next-line no-console
+        console.error(`Daily response XP error details: ${err.message}`, err.stack);
+      }
+    }
 
     return res.json({
       message: "Daily response submitted successfully",

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.submitDailyResponse = exports.deleteTarget = exports.carryForwardTarget = void 0;
 const prismaconfig_1 = __importDefault(require("../../config/prismaconfig"));
+const xp_targets_1 = require("./xp.targets");
 /**
  * CARRY FORWARD MISSED TARGET
  * POST /api/targets/:id/carry-forward
@@ -165,6 +166,18 @@ const submitDailyResponse = async (req, res) => {
                 status: "completed", // Set status to completed when response is submitted
             },
         });
+        // ✅ XP awarding (non-blocking) - Check and award XP for answering 2 questions
+        try {
+            await (0, xp_targets_1.checkAndAwardDailyResponseXP)(userId, today, question1, answer1, question2, answer2);
+        }
+        catch (err) {
+            // eslint-disable-next-line no-console
+            console.error("Daily response XP error:", err);
+            if (err instanceof Error) {
+                // eslint-disable-next-line no-console
+                console.error(`Daily response XP error details: ${err.message}`, err.stack);
+            }
+        }
         return res.json({
             message: "Daily response submitted successfully",
             target: {
