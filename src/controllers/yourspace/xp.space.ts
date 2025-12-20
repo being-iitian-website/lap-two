@@ -183,12 +183,27 @@ export async function checkAndAwardJournalXP(
       `Journal streak XP threshold check: previous=${previousStreak}, current=${currentStreak}`
     );
     
-    // Check 7-day journaling streak threshold
-    // Award if: previous < 7 AND current >= 7
-    if (previousStreak < 7 && currentStreak >= 7) {
-      // eslint-disable-next-line no-console
-      console.log(`Awarding 7-day journaling streak XP: ${50} XP to user ${userId}`);
-      await awardXP(userId, normalizedDate, "journal_7day", 50);
+   
+    if (currentStreak % 7 === 0 && previousStreak % 7 !== 0) {
+      // Check if 7-day streak XP was already awarded today to avoid duplicate attempts
+      const existingAward = await (prisma as any).dailyXPAward.findUnique({
+        where: {
+          userId_date_threshold: {
+            userId,
+            date: normalizedDate,
+            threshold: "journal_7day",
+          },
+        },
+      });
+
+      if (!existingAward) {
+        // eslint-disable-next-line no-console
+        console.log(`Awarding 7-day journaling streak XP: ${50} XP to user ${userId} (streak: ${currentStreak} days)`);
+        await awardXP(userId, normalizedDate, "journal_7day", 50);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(`7-day journaling streak XP already awarded for user ${userId} on ${normalizedDate.toISOString()}`);
+      }
     }
   } catch (error) {
     // eslint-disable-next-line no-console
