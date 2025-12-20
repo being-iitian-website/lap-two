@@ -315,16 +315,50 @@ export async function checkAndAwardSleepXP(
     // Award if: current streak is divisible by 7 AND previous streak was not divisible by 7
     // This awards XP at 7, 14, 21, 28, 35, etc. days
     if (currentStreak % 7 === 0 && previousStreak % 7 !== 0) {
-      // eslint-disable-next-line no-console
-      console.log(`Awarding 7-day sleep streak XP: ${25} XP to user ${userId} (streak: ${currentStreak} days)`);
-      await awardXP(userId, normalizedDate, "sleep_7day", 25);
+      // Check if 7-day streak XP was already awarded today to avoid duplicate attempts
+      const existing7DayAward = await (prisma as any).dailyXPAward.findUnique({
+        where: {
+          userId_date_threshold: {
+            userId,
+            date: normalizedDate,
+            threshold: "sleep_7day",
+          },
+        },
+      });
+
+      if (!existing7DayAward) {
+        // eslint-disable-next-line no-console
+        console.log(`Awarding 7-day sleep streak XP: ${25} XP to user ${userId} (streak: ${currentStreak} days)`);
+        await awardXP(userId, normalizedDate, "sleep_7day", 25);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(`7-day sleep streak XP already awarded for user ${userId} on ${normalizedDate.toISOString()}`);
+      }
     }
     
-    
+    // Check 21-day sleep streak threshold
+    // Award if: current streak is divisible by 21 AND previous streak was not divisible by 21
+    // This awards XP at 21, 42, 63, 84, etc. days
     if (currentStreak % 21 === 0 && previousStreak % 21 !== 0) {
-      // eslint-disable-next-line no-console
-      console.log(`Awarding 21-day sleep streak XP: ${100} XP to user ${userId} (streak: ${currentStreak} days)`);
-      await awardXP(userId, normalizedDate, "sleep_21day", 100);
+      // Check if 21-day streak XP was already awarded today to avoid duplicate attempts
+      const existing21DayAward = await (prisma as any).dailyXPAward.findUnique({
+        where: {
+          userId_date_threshold: {
+            userId,
+            date: normalizedDate,
+            threshold: "sleep_21day",
+          },
+        },
+      });
+
+      if (!existing21DayAward) {
+        // eslint-disable-next-line no-console
+        console.log(`Awarding 21-day sleep streak XP: ${100} XP to user ${userId} (streak: ${currentStreak} days)`);
+        await awardXP(userId, normalizedDate, "sleep_21day", 100);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(`21-day sleep streak XP already awarded for user ${userId} on ${normalizedDate.toISOString()}`);
+      }
     }
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -414,11 +448,27 @@ export async function checkAndAwardExerciseXP(
       `Exercise XP threshold check: previous=${previousStreak}, current=${currentStreak}`
     );
     
-    
+    // Check if 5-day streak milestone is reached
     if (currentStreak % 5 === 0 && previousStreak % 5 !== 0) {
-      // eslint-disable-next-line no-console
-      console.log(`Awarding 5-day exercise streak XP: ${25} XP to user ${userId} (streak: ${currentStreak} days)`);
-      await awardXP(userId, normalizedDate, "exercise_5day", 25);
+      // Check if 5-day streak XP was already awarded today to avoid duplicate attempts
+      const existingAward = await (prisma as any).dailyXPAward.findUnique({
+        where: {
+          userId_date_threshold: {
+            userId,
+            date: normalizedDate,
+            threshold: "exercise_5day",
+          },
+        },
+      });
+
+      if (!existingAward) {
+        // eslint-disable-next-line no-console
+        console.log(`Awarding 5-day exercise streak XP: ${25} XP to user ${userId} (streak: ${currentStreak} days)`);
+        await awardXP(userId, normalizedDate, "exercise_5day", 25);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(`5-day exercise streak XP already awarded for user ${userId} on ${normalizedDate.toISOString()}`);
+      }
     }
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -511,9 +561,25 @@ export async function checkAndAwardMeditationXP(
     // Award if: current streak is divisible by 5 AND previous streak was not divisible by 5
     // This awards XP at 5, 10, 15, 20, 25, etc. days
     if (currentStreak % 5 === 0 && previousStreak % 5 !== 0) {
-      // eslint-disable-next-line no-console
-      console.log(`Awarding 5-day meditation streak XP: ${25} XP to user ${userId} (streak: ${currentStreak} days)`);
-      await awardXP(userId, normalizedDate, "meditation_5day", 25);
+      // Check if 5-day streak XP was already awarded today to avoid duplicate attempts
+      const existingAward = await (prisma as any).dailyXPAward.findUnique({
+        where: {
+          userId_date_threshold: {
+            userId,
+            date: normalizedDate,
+            threshold: "meditation_5day",
+          },
+        },
+      });
+
+      if (!existingAward) {
+        // eslint-disable-next-line no-console
+        console.log(`Awarding 5-day meditation streak XP: ${25} XP to user ${userId} (streak: ${currentStreak} days)`);
+        await awardXP(userId, normalizedDate, "meditation_5day", 25);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(`5-day meditation streak XP already awarded for user ${userId} on ${normalizedDate.toISOString()}`);
+      }
     }
   } catch (error) {
     // eslint-disable-next-line no-console
