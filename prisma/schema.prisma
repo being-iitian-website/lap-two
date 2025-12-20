@@ -22,6 +22,7 @@ enum TargetType {
   revision
   solving
   mock
+  challenge
 }
 
 enum TargetStatus {

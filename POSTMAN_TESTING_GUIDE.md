@@ -369,6 +369,13 @@ or
 }
 ```
 
+### 409 Conflict
+```json
+{
+  "message": "Daily challenge already exists for today"
+}
+```
+
 ### 404 Not Found
 ```json
 {
@@ -472,6 +479,55 @@ or
 
 ---
 
+## Step 9: Create Daily Challenge Target
+
+### Request
+- **Method**: `POST`
+- **URL**: `http://localhost:5000/api/targets/challenge`
+- **Headers**:
+  ```
+  Content-Type: application/json
+  Authorization: Bearer YOUR_JWT_TOKEN_HERE
+  ```
+
+- **Body** (raw JSON):
+  ```json
+  {}
+  ```
+  
+  **Note**: 
+  - No request body is required. The challenge target is created with predefined values:
+    - `type`: `"challenge"`
+    - `status`: `"pending"`
+    - `field`: `"Daily Challenge"`
+    - `subject`: `"Challenge"`
+    - `title`: `"Daily Challenge"`
+    - `plannedHours`: `1.0`
+  - Only one challenge target per user per day is allowed.
+  - The challenge target is automatically associated with the authenticated user.
+
+### Expected Response (201 Created)
+```json
+{
+  "message": "Daily challenge added successfully",
+  "target": {
+    "id": "uuid-string-here",
+    "type": "challenge",
+    "status": "pending"
+  }
+}
+```
+
+### Test Cases:
+1. **Valid Request**: Should return 201 with challenge target details
+2. **Missing Token**: Remove Authorization header → Should return 401 Unauthorized
+3. **Invalid Token**: Use fake token → Should return 401 Invalid or expired token
+4. **Duplicate Challenge**: Create challenge twice on the same day → First request returns 201, second request returns 409 Conflict
+5. **Create Challenge on Different Days**: Create challenge today, then create again tomorrow → Should return 201 (allowed for different days)
+6. **Empty Body**: Send empty JSON object `{}` → Should return 201 (no body required)
+
+---
+
 ## Quick Test Checklist
 
 - [ ] Register a new user and get JWT token
@@ -483,6 +539,8 @@ or
 - [ ] Carry forward a missed target
 - [ ] Submit daily response for a target
 - [ ] Try submitting daily response twice on same day (should fail)
+- [ ] Create daily challenge target
+- [ ] Try creating daily challenge twice on same day (should fail)
 - [ ] Delete a target
 - [ ] Try accessing other user's target (should fail)
 - [ ] Try deleting other user's target (should fail)
@@ -494,7 +552,7 @@ or
 1. **JWT Token Expiry**: Tokens expire after 7 days (as configured in `src/utils/jwt.ts`)
 2. **User Isolation**: Each user can only access their own targets
 3. **Date Format**: Use ISO 8601 format: `YYYY-MM-DDTHH:mm:ssZ`
-4. **Target Types**: Must be one of: `theory`, `lecture`, `revision`, `solving`, `mock`
+4. **Target Types**: Must be one of: `theory`, `lecture`, `revision`, `solving`, `mock`, `challenge`
 5. **Target Status**: Must be one of: `pending`, `completed`, `missed`
 
 ---

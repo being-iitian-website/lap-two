@@ -11,6 +11,7 @@ import {
   deleteTarget,
   submitDailyResponse,
 } from "../controllers/targets/targetresponses.controller";
+import { createChallengeTarget } from "../controllers/targets/challenge.controller";
 
 const router = Router();
 
@@ -19,6 +20,9 @@ router.use(authMiddleware);
 
 // Create a new target
 router.post("/", createTarget);
+
+// Create daily challenge target
+router.post("/challenge", createChallengeTarget);
 
 // Get today's targets
 router.get("/today", getTodayTargets);

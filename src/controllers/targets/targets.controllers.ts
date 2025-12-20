@@ -4,7 +4,7 @@ import prisma from "../../config/prismaconfig";
 import type { AuthenticatedRequest } from "../../middleware/auth.middleware";
 
 // Enum types matching Prisma schema
-type TargetType = "theory" | "lecture" | "revision" | "solving" | "mock";
+type TargetType = "theory" | "lecture" | "revision" | "solving" | "mock" | "challenge";
 type TargetStatus = "pending" | "completed" | "missed";
 
 interface CreateTargetBody {
@@ -59,7 +59,7 @@ export const createTarget = async (
     }
 
     // Validate enum values from Prisma schema
-    const validTypes: TargetType[] = ["theory", "lecture", "revision", "solving", "mock"];
+    const validTypes: TargetType[] = ["theory", "lecture", "revision", "solving", "mock", "challenge"];
     if (!validTypes.includes(type)) {
       return res.status(400).json({
         message: `Invalid target type. Must be one of: ${validTypes.join(", ")}`,

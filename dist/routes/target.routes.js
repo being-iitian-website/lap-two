@@ -4,11 +4,14 @@ const express_1 = require("express");
 const auth_middleware_1 = require("../middleware/auth.middleware");
 const targets_controllers_1 = require("../controllers/targets/targets.controllers");
 const targetresponses_controller_1 = require("../controllers/targets/targetresponses.controller");
+const challenge_controller_1 = require("../controllers/targets/challenge.controller");
 const router = (0, express_1.Router)();
 // All routes require authentication
 router.use(auth_middleware_1.authMiddleware);
 // Create a new target
 router.post("/", targets_controllers_1.createTarget);
+// Create daily challenge target
+router.post("/challenge", challenge_controller_1.createChallengeTarget);
 // Get today's targets
 router.get("/today", targets_controllers_1.getTodayTargets);
 // Update target status

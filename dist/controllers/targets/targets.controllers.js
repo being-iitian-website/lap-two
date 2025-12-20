@@ -23,7 +23,7 @@ const createTarget = async (req, res) => {
             });
         }
         // Validate enum values from Prisma schema
-        const validTypes = ["theory", "lecture", "revision", "solving", "mock"];
+        const validTypes = ["theory", "lecture", "revision", "solving", "mock", "challenge"];
         if (!validTypes.includes(type)) {
             return res.status(400).json({
                 message: `Invalid target type. Must be one of: ${validTypes.join(", ")}`,
