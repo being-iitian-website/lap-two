@@ -3,6 +3,8 @@ import { Router } from "express";
 import { authMiddleware } from "../middleware/auth.middleware";
 import {
   createTarget,
+  getAllTargets,
+  getTargetStatus,
   getTodayTargets,
   updateTargetStatus,
 } from "../controllers/targets/targets.controllers";
@@ -18,14 +20,20 @@ const router = Router();
 // All routes require authentication
 router.use(authMiddleware);
 
+// Get all user targets (with optional forTomorrow query param)
+router.get("/", getAllTargets);
+
+// Get target status (day completion)
+router.get("/status", getTargetStatus);
+
+// Get today's targets
+router.get("/today", getTodayTargets);
+
 // Create a new target
 router.post("/", createTarget);
 
 // Create daily challenge target
 router.post("/challenge", createChallengeTarget);
-
-// Get today's targets
-router.get("/today", getTodayTargets);
 
 // Update target status
 router.patch("/:id/status", updateTargetStatus);
