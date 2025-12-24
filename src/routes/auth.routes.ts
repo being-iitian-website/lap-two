@@ -1,6 +1,12 @@
 import { Router } from "express";
 
-import { login, register, logout } from "../controllers/authentication/auth.controller";
+import {
+  login,
+  register,
+  logout,
+  startGoogleAuth,
+  handleGoogleCallback,
+} from "../controllers/authentication/auth.controller";
 
 const router = Router();
 
@@ -13,6 +19,10 @@ router.get("/test", (_req, res) => {
 
 router.post("/register", register);
 router.post("/login", login);
+
+// Google OAuth 2.0
+router.get("/google", startGoogleAuth);
+router.get("/google/callback", handleGoogleCallback);
 
 // Stateless logout endpoint
 router.post("/logout", logout);

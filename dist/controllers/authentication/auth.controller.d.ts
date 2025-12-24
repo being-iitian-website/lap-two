@@ -8,6 +8,10 @@ interface LoginBody {
     email?: string;
     password?: string;
 }
+interface GoogleCallbackQuery {
+    code?: string;
+    state?: string;
+}
 /**
  * REGISTER
  */
@@ -24,5 +28,13 @@ export declare const login: (req: Request<unknown, unknown, LoginBody>, res: Res
  * for frontend/Postman flows and future extensibility (e.g. blacklist).
  */
 export declare const logout: (_req: Request, res: Response) => Promise<Response | void>;
+/**
+ * GOOGLE AUTH INITIATION
+ */
+export declare const startGoogleAuth: (_req: Request, res: Response) => Promise<Response | void>;
+/**
+ * GOOGLE AUTH CALLBACK
+ */
+export declare const handleGoogleCallback: (req: Request<unknown, unknown, unknown, GoogleCallbackQuery>, res: Response) => Promise<Response | void>;
 export {};
 //# sourceMappingURL=auth.controller.d.ts.map

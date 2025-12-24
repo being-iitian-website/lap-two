@@ -11,6 +11,9 @@ router.get("/test", (_req, res) => {
 });
 router.post("/register", auth_controller_1.register);
 router.post("/login", auth_controller_1.login);
+// Google OAuth 2.0
+router.get("/google", auth_controller_1.startGoogleAuth);
+router.get("/google/callback", auth_controller_1.handleGoogleCallback);
 // Stateless logout endpoint
 router.post("/logout", auth_controller_1.logout);
 exports.default = router;

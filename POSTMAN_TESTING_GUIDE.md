@@ -10,6 +10,41 @@ All Target Management APIs require JWT authentication. Follow these steps to tes
 
 ---
 
+## Step 0: Google OAuth Login (Passwordless)
+
+Use this flow if you prefer Google sign-in instead of email/password. The backend handles the OAuth redirect and returns a JWT.
+
+### Request 1 – Start Login
+- **Method**: `GET`
+- **URL**: `http://localhost:5000/api/auth/google`
+- **Action**: Open this URL in your browser. Google shows the consent screen.
+
+### Request 2 – Callback (handled automatically by Google)
+- **Redirect URL**: `http://localhost:5000/api/auth/google/callback` (or your configured `GOOGLE_CALLBACK_URL`)
+- On success, the backend responds with JSON:
+```json
+{
+  "message": "Login successful",
+  "token": "jwt_token_here",
+  "user": {
+    "id": "uuid",
+    "email": "user@gmail.com",
+    "name": "User Name",
+    "image": "https://..."
+  }
+}
+```
+
+**Save the `token`** as `jwt_token` in your Postman environment for subsequent API calls.
+
+### Test Cases
+1. **Happy path**: Complete Google consent → receive JWT and user info.
+2. **Email already registered with password login**: Expect 409 with message to use email/password.
+3. **Callback without `code`**: Expect 400.
+4. **Missing/invalid Google client config**: Expect 500/401 depending on failure point.
+
+---
+
 ## Step 1: Register a New User (Get JWT Token)
 
 ### Request
