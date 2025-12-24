@@ -35,9 +35,18 @@ export const getAllTargets = async (
   res: Response
 ): Promise<Response | void> => {
   try {
+    // Debug logging
+    console.log('🔍 getAllTargets called', {
+      hasUser: !!req.user,
+      userId: req.user?.id,
+      query: req.query,
+      hasDbUrl: !!process.env.DATABASE_URL,
+    });
+
     const userId = req.user?.id as string;
 
     if (!userId) {
+      console.error('❌ getAllTargets: No userId found in request');
       return res.status(401).json({ message: "Unauthorized" });
     }
 
@@ -65,6 +74,8 @@ export const getAllTargets = async (
       end = new Date();
       end.setHours(23, 59, 59, 999);
     }
+
+    console.log('🔍 Fetching targets with date range:', { start, end });
 
     const targets = await prisma.target.findMany({
       where: {
@@ -99,6 +110,8 @@ export const getAllTargets = async (
         startTime: "asc",
       },
     });
+
+    console.log('✅ getAllTargets: Found targets:', targets.length);
 
     // Transform to match frontend expected format
     const transformedTargets = targets.map(target => ({
@@ -137,9 +150,16 @@ export const getAllTargets = async (
       data: transformedTargets,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Error fetching targets:", error);
-    return res.status(500).json({ message: "Failed to fetch targets" });
+    console.error("❌ Error fetching targets:", error);
+    console.error("Error details:", {
+      name: error instanceof Error ? error.name : 'Unknown',
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return res.status(500).json({ 
+      message: "Failed to fetch targets",
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 };
 
@@ -152,9 +172,15 @@ export const getTargetStatus = async (
   res: Response
 ): Promise<Response | void> => {
   try {
+    console.log('🔍 getTargetStatus called', {
+      hasUser: !!req.user,
+      userId: req.user?.id,
+    });
+
     const userId = req.user?.id as string;
 
     if (!userId) {
+      console.error('❌ getTargetStatus: No userId found in request');
       return res.status(401).json({ message: "Unauthorized" });
     }
 
@@ -178,6 +204,8 @@ export const getTargetStatus = async (
       },
     });
 
+    console.log('✅ getTargetStatus: Found targets:', targets.length);
+
     // Check if all targets are completed or missed
     const isDayCompleted = targets.length > 0 && targets.every(
       target => target.status === 'completed' || target.status === 'missed'
@@ -194,9 +222,16 @@ export const getTargetStatus = async (
       },
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Error fetching target status:", error);
-    return res.status(500).json({ message: "Failed to fetch target status" });
+    console.error("❌ Error fetching target status:", error);
+    console.error("Error details:", {
+      name: error instanceof Error ? error.name : 'Unknown',
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    return res.status(500).json({ 
+      message: "Failed to fetch target status",
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 };
 
