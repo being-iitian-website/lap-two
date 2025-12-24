@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import { authMiddleware } from "../middleware/auth.middleware";
 import { saveJournal, getMyJournals, getTodayResponses } from "../controllers/yourspace/space.controller";
+import { setJournalCredentials, resetJournalPassword } from "../controllers/yourspace/journalCredentials.controller";
 import { saveVisionBoard, getVisionBoard } from "../controllers/yourspace/visionboard";
 
 const router = Router();
@@ -17,6 +18,10 @@ router.get("/me", getMyJournals);
 
 // Get today's responses
 router.get("/today-responses", getTodayResponses);
+
+// Journal credentials routes
+router.post("/journal/credentials/set", setJournalCredentials);
+router.post("/journal/credentials/reset", resetJournalPassword);
 
 // Vision Board routes
 // Save or update vision board

@@ -3,8 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.server = exports.app = void 0;
+exports.io = exports.server = exports.app = void 0;
 const express_1 = __importDefault(require("express"));
+const http_1 = __importDefault(require("http"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
@@ -16,6 +17,10 @@ const space_routes_1 = __importDefault(require("./routes/space.routes"));
 const performance_routes_1 = __importDefault(require("./routes/performance.routes"));
 const dashboard_routes_1 = __importDefault(require("./routes/dashboard.routes"));
 const nonacademic_routes_1 = __importDefault(require("./routes/nonacademic.routes"));
+const notification_routes_1 = __importDefault(require("./routes/notification.routes"));
+// Import Socket.IO and subscriber
+const socket_1 = require("./services/socket");
+require("./services/reward.subscriber"); // Auto-start subscriber
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 exports.app = app;
@@ -43,11 +48,19 @@ app.use("/api/yourspace", space_routes_1.default);
 app.use("/api/performance", performance_routes_1.default);
 app.use("/api/dashboard", dashboard_routes_1.default);
 app.use("/api", nonacademic_routes_1.default);
+app.use("/api/notifications", notification_routes_1.default);
 // Start server
 const port = process.env.PORT || 5000;
-const server = app.listen(port, () => {
+// Create HTTP server for Socket.IO
+const httpServer = http_1.default.createServer(app);
+// Initialize Socket.IO with Redis adapter
+const io = (0, socket_1.initializeSocket)(httpServer);
+exports.io = io;
+const server = httpServer.listen(port, () => {
     // eslint-disable-next-line no-console
     console.log(`Server started successfully on port ${port}`);
+    // eslint-disable-next-line no-console
+    console.log(`WebSocket server ready for real-time notifications`);
 });
 exports.server = server;
 exports.default = app;

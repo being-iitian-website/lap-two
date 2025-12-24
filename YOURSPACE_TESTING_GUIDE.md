@@ -2,7 +2,7 @@
 
 All YourSpace APIs require JWT authentication. This guide shows how to test Journal and Vision Board APIs in Postman.
 
-The `Journal` and `VisionBoard` tables are defined in `prisma/schema.prisma`:
+The `Journal`, `VisionBoard`, and `JournalCredential` tables are defined in `prisma/schema.prisma`:
 
 ```prisma
 model Journal {
@@ -11,6 +11,8 @@ model Journal {
   notes     String
   userId    String
   user      User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetId  String?
+  target    Target? @relation(fields: [targetId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -46,6 +48,20 @@ model VisionBoardItem {
 }
 ```
 
+Additional model used to protect journals:
+
+```prisma
+model JournalCredential {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  username     String
+  passwordHash String
+  user         User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+```
+
 ### 1. Prerequisites
 
 - **Base URL**: `http://localhost:5000`
@@ -57,7 +73,82 @@ model VisionBoardItem {
 
 ## Journal APIs
 
-### 2. Create / Update Journal (Upsert)
+Journal updates and viewing are protected by per-user journal credentials:
+- Update requires `username` and `password` in the body
+- Viewing requires the `password` (header or query recommended)
+
+---
+
+### 2.1 Set Journal Credentials (one-time setup)
+
+**Endpoint**
+
+- `POST {{base_url}}/api/yourspace/journal/credentials/set`
+
+**Headers**
+
+```text
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+```
+
+**Request Body**
+
+```json
+{
+  "username": "myjournaluser",
+  "password": "StrongPass#123"
+}
+```
+
+**Expected Response (200 OK)**
+
+```json
+{ "message": "Journal credentials set successfully" }
+```
+
+**Error Responses**
+
+- 409 if credentials already set (use reset)
+- 400 if required fields missing
+
+---
+
+### 2.2 Reset Journal Password (new ≠ old)
+
+**Endpoint**
+
+- `POST {{base_url}}/api/yourspace/journal/credentials/reset`
+
+**Headers**
+
+```text
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+```
+
+**Request Body**
+
+```json
+{
+  "oldPassword": "StrongPass#123",
+  "newPassword": "NewStrongPass#456"
+}
+```
+
+**Expected Response (200 OK)**
+
+```json
+{ "message": "Journal password reset successfully" }
+```
+
+**Error Responses**
+
+- 400 if new password equals old
+- 403 if old password incorrect
+- 404 if credentials not set
+
+### 3. Create / Update Journal (Upsert)
 
 **Endpoint**
 
@@ -85,7 +176,9 @@ Authorization: Bearer {{jwt_token}}
 {
   "id": "existing-journal-uuid",
   "date": "2025-01-16",
-  "notes": "Updated notes for this day."
+  "notes": "Updated notes for this day.",
+  "username": "myjournaluser",
+  "password": "NewStrongPass#456"
 }
 ```
 
@@ -93,6 +186,7 @@ Authorization: Bearer {{jwt_token}}
 
 - If `id` is provided:
   - Finds a journal with that `id` belonging to the current user.
+  - Requires valid journal credentials (`username` + `password`).
   - Updates its `date` and `notes`.
   - `updated_at` is automatically updated.
 - If `id` is not provided:
@@ -112,11 +206,13 @@ Authorization: Bearer {{jwt_token}}
 - **400 Bad Request**
   - Missing `date` or `notes`
   - Invalid `date` format (use ISO date, e.g. `"2025-01-15"`)
-  - For updates: missing both `date` and `notes`
+  - For updates: missing `username` or `password`
 - **401 Unauthorized**
   - Missing or invalid `Authorization` header
 - **404 Not Found**
   - Updating with `id` that does not belong to the current user
+- **403 Forbidden**
+  - Invalid journal credentials or not configured
 - **500 Internal Server Error**
   - Unexpected server error
 
@@ -129,7 +225,7 @@ Authorization: Bearer {{jwt_token}}
 
 ---
 
-### 3. Get My Journals
+### 4. Get My Journals (Password required)
 
 **Endpoint**
 
@@ -139,10 +235,14 @@ Authorization: Bearer {{jwt_token}}
 
 ```text
 Authorization: Bearer {{jwt_token}}
+X-Journal-Password: {{journal_password}}
 ```
+
+Alternatively, supply the password as `?password={{journal_password}}`.
 
 **Backend Behavior**
 
+- Requires correct journal password.
 - Returns all journals for the authenticated user.
 - Sorted by `date` (descending) and then by `createdAt` (newest first).
 
@@ -169,13 +269,13 @@ Authorization: Bearer {{jwt_token}}
 
 **Test Cases**
 
-1. After creating journals, call `GET /api/yourspace/me` and verify they appear.
+1. After creating journals, call `GET /api/yourspace/me` with password and verify they appear.
 2. Ensure journals from other users are not included.
 3. Check that `updatedAt` changes after you update a journal via `POST /api/yourspace` (with `id`).
 
 ---
 
-### 4. Get Today's Responses
+### 5. Get Today's Responses
 
 **Endpoint**
 
@@ -247,7 +347,7 @@ Before testing this endpoint, you need to:
 
 ## Vision Board APIs
 
-### 5. Save / Update Vision Board
+### 6. Save / Update Vision Board
 
 **Endpoint**
 
@@ -411,7 +511,7 @@ Authorization: Bearer {{jwt_token}}
 
 ---
 
-### 6. Get Vision Board
+### 7. Get Vision Board
 
 **Endpoint**
 
@@ -516,18 +616,19 @@ Authorization: Bearer {{jwt_token}}
 
 ---
 
-### 7. Complete Postman Workflow
+### 8. Complete Postman Workflow
 
 #### Journal Workflow
 
 1. **Login** via `POST /api/auth/login` and store `token` in `{{jwt_token}}`.
-2. **Create a journal** via `POST /api/yourspace`.
-3. **Fetch journals** via `GET /api/yourspace/me` and verify the new entry.
-4. **Update a journal**:
+2. **Set journal credentials** via `POST /api/yourspace/journal/credentials/set`.
+3. **Create a journal** via `POST /api/yourspace`.
+4. **Fetch journals (password required)** via `GET /api/yourspace/me` with `X-Journal-Password`.
+5. **Update a journal (requires username + password)**:
    - Copy `id` from step 3.
-   - Call `POST /api/yourspace` with that `id` and new `notes`.
-   - Call `GET /api/yourspace/me` again and verify `updatedAt` changed.
-5. **Get today's responses**:
+  - Call `POST /api/yourspace` with that `id`, new `notes`, plus `username` and `password`.
+  - Call `GET /api/yourspace/me` again (with password) and verify `updatedAt` changed.
+6. **Get today's responses**:
    - First, create a target via `POST /api/targets` (see Target Management API guide).
    - Submit daily response for that target via `POST /api/targets/{targetId}/daily-response`.
    - Call `GET /api/yourspace/today-responses` and verify the response appears.
@@ -564,15 +665,16 @@ Authorization: Bearer {{jwt_token}}
 
 ---
 
-### 8. Common Testing Scenarios
+### 9. Common Testing Scenarios
 
 #### Scenario 1: First-Time User Setup
 
 1. Register/Login → get token
+2. Set Journal Credentials → `POST /api/yourspace/journal/credentials/set`
 2. GET `/api/yourspace/vision-board` → expect empty default structure
 3. POST `/api/yourspace/vision-board/save` → create initial board
 4. POST `/api/yourspace` → create first journal entry
-5. GET `/api/yourspace/me` → verify journal appears
+5. GET `/api/yourspace/me` with password → verify journal appears
 
 #### Scenario 2: Daily Usage
 
@@ -580,7 +682,7 @@ Authorization: Bearer {{jwt_token}}
 2. GET `/api/yourspace/vision-board` → view goals
 3. GET `/api/yourspace/today-responses` → check daily progress
 4. POST `/api/yourspace` → write daily journal
-5. GET `/api/yourspace/me` → review past entries
+5. GET `/api/yourspace/me` with password → review past entries
 
 #### Scenario 3: Vision Board Updates
 
@@ -593,7 +695,7 @@ Authorization: Bearer {{jwt_token}}
 
 ---
 
-### 9. Error Handling Checklist
+### 10. Error Handling Checklist
 
 Test all endpoints with:
 
@@ -604,15 +706,20 @@ Test all endpoints with:
 - ✅ Invalid data types → expect 400
 - ✅ User isolation (different users' data) → should be separate
 - ✅ Server errors → expect 500 (if applicable)
+- ✅ Missing journal password on GET `/api/yourspace/me` → expect 400
+- ✅ Wrong journal password on GET `/api/yourspace/me` → expect 403
+- ✅ Missing `username`/`password` on journal update → expect 400
+- ✅ Wrong journal credentials on journal update → expect 403
 
 ---
 
-### 10. Notes
+### 11. Notes
 
 - All endpoints require JWT authentication via `Authorization: Bearer {token}` header
 - Vision board items are stored only if they have content (empty cells are not saved)
 - Each user can have only one vision board (saving overwrites the existing one)
 - Journal entries can be created multiple times per day (different dates)
+- Journal credentials protect reading and updating journals; create is open to the logged-in user.
 - Vision board items support both text and image types
 - All date fields use ISO 8601 format
 - Color fields use hex format (e.g., "#000000", "#ffffff")

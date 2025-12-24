@@ -44,6 +44,7 @@ enum RevisionSource {
 
 
 
+
 model User_info {
   id         String   @id @default(uuid())
   name       String?
@@ -62,6 +63,8 @@ model User_info {
   wellness DailyWellness[]
   xpRecord      UserXP?
   dailyXPAwards DailyXPAward[]
+  notifications  Notification[]
+  journalCredentials JournalCredential[]
 }
 
 
@@ -212,7 +215,8 @@ model DailyWellness {
 model UserXP {
   id        String   @id @default(uuid())
   userId    String   @unique
-  totalXP   Int      @default(0)
+  totalXP         Int@default(0)
+  
 
   user      User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -224,6 +228,7 @@ model DailyXPAward {
   id        String   @id @default(uuid())
   userId    String
   date      DateTime
+  
   threshold String   // "focus_7h" or "focus_11h"
   xpAmount  Int      // 15 or 30
 
@@ -233,5 +238,34 @@ model DailyXPAward {
 
   @@unique([userId, date, threshold])
   @@index([userId, date])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   // "XP", "STREAK", "BADGE"
+  title     String
+  message   String
+  metadata  Json?
+  isRead    Boolean  @default(false)
+
+  user      User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
+
+// Credentials to protect Journal updates per user
+model JournalCredential {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  username     String
+  passwordHash String
+
+  user         User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 

@@ -3,11 +3,14 @@ import type { Response } from "express";
 import prisma from "../../config/prismaconfig";
 import type { AuthenticatedRequest } from "../../middleware/auth.middleware";
 import { checkAndAwardJournalXP } from "./xp.space";
+import { verifyJournalCredentials, verifyJournalPassword } from "./journalCredentials.controller";
 
 interface SaveJournalBody {
   id?: string;
   date: string;
   notes: string;
+  username?: string; // required for update
+  password?: string; // required for update
 }
 
 /**
@@ -25,7 +28,7 @@ export const saveJournal = async (
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const { id, date, notes } = req.body as SaveJournalBody;
+    const { id, date, notes, username, password } = req.body as SaveJournalBody;
 
     if (!date || !notes) {
       return res
@@ -46,6 +49,20 @@ export const saveJournal = async (
     let savedJournal;
     
     if (id) {
+      // Require journal credentials for updating an existing journal
+      if (!username || !password) {
+        return res.status(400).json({
+          message: "Username and password are required to update a journal",
+        });
+      }
+
+      const ok = await verifyJournalCredentials(userId, username, password);
+      if (!ok) {
+        return res.status(403).json({
+          message: "Invalid journal credentials or not configured",
+        });
+      }
+
       // Update existing journal, ensuring it belongs to the current user
       const existing = await (prisma as any).journal.findFirst({
         where: {
@@ -113,6 +130,27 @@ export const getMyJournals = async (
 
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    // Require journal password for viewing journals
+    const rawHeaderPwd = req.headers["x-journal-password"]; // header style
+    const headerPwd = Array.isArray(rawHeaderPwd) ? rawHeaderPwd[0] : rawHeaderPwd;
+    const queryPwd = (req.query?.password as string) || undefined;
+    const bodyPwd = (req.body as any)?.password as string | undefined;
+    const collected = headerPwd ?? queryPwd ?? bodyPwd;
+    const password = typeof collected === "string" ? collected.trim() : undefined;
+
+    if (!password) {
+      return res.status(400).json({
+        message: "Password is required to view journals",
+      });
+    }
+
+    const allowed = await verifyJournalPassword(userId, password);
+    if (!allowed) {
+      return res.status(403).json({
+        message: "Invalid journal password or not configured",
+      });
     }
 
     const journals = await (prisma as any).journal.findMany({

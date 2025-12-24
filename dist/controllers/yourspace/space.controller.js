@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTodayResponses = exports.getMyJournals = exports.saveJournal = void 0;
 const prismaconfig_1 = __importDefault(require("../../config/prismaconfig"));
 const xp_space_1 = require("./xp.space");
+const journalCredentials_controller_1 = require("./journalCredentials.controller");
 /**
  * CREATE / UPDATE JOURNAL (Upsert-style)
  * POST /api/journal
@@ -16,7 +17,7 @@ const saveJournal = async (req, res) => {
         if (!userId) {
             return res.status(401).json({ message: "Unauthorized" });
         }
-        const { id, date, notes } = req.body;
+        const { id, date, notes, username, password } = req.body;
         if (!date || !notes) {
             return res
                 .status(400)
@@ -32,6 +33,18 @@ const saveJournal = async (req, res) => {
         parsedDate.setHours(0, 0, 0, 0);
         let savedJournal;
         if (id) {
+            // Require journal credentials for updating an existing journal
+            if (!username || !password) {
+                return res.status(400).json({
+                    message: "Username and password are required to update a journal",
+                });
+            }
+            const ok = await (0, journalCredentials_controller_1.verifyJournalCredentials)(userId, username, password);
+            if (!ok) {
+                return res.status(403).json({
+                    message: "Invalid journal credentials or not configured",
+                });
+            }
             // Update existing journal, ensuring it belongs to the current user
             const existing = await prismaconfig_1.default.journal.findFirst({
                 where: {
@@ -94,6 +107,24 @@ const getMyJournals = async (req, res) => {
         const userId = req.user?.id;
         if (!userId) {
             return res.status(401).json({ message: "Unauthorized" });
+        }
+        // Require journal password for viewing journals
+        const rawHeaderPwd = req.headers["x-journal-password"]; // header style
+        const headerPwd = Array.isArray(rawHeaderPwd) ? rawHeaderPwd[0] : rawHeaderPwd;
+        const queryPwd = req.query?.password || undefined;
+        const bodyPwd = req.body?.password;
+        const collected = headerPwd ?? queryPwd ?? bodyPwd;
+        const password = typeof collected === "string" ? collected.trim() : undefined;
+        if (!password) {
+            return res.status(400).json({
+                message: "Password is required to view journals",
+            });
+        }
+        const allowed = await (0, journalCredentials_controller_1.verifyJournalPassword)(userId, password);
+        if (!allowed) {
+            return res.status(403).json({
+                message: "Invalid journal password or not configured",
+            });
         }
         const journals = await prismaconfig_1.default.journal.findMany({
             where: {
