@@ -8,12 +8,16 @@ const challenge_controller_1 = require("../controllers/targets/challenge.control
 const router = (0, express_1.Router)();
 // All routes require authentication
 router.use(auth_middleware_1.authMiddleware);
+// Get all user targets (with optional forTomorrow query param)
+router.get("/", targets_controllers_1.getAllTargets);
+// Get target status (day completion)
+router.get("/status", targets_controllers_1.getTargetStatus);
+// Get today's targets
+router.get("/today", targets_controllers_1.getTodayTargets);
 // Create a new target
 router.post("/", targets_controllers_1.createTarget);
 // Create daily challenge target
 router.post("/challenge", challenge_controller_1.createChallengeTarget);
-// Get today's targets
-router.get("/today", targets_controllers_1.getTodayTargets);
 // Update target status
 router.patch("/:id/status", targets_controllers_1.updateTargetStatus);
 // Carry forward a missed target

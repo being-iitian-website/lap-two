@@ -6,6 +6,7 @@ import {
   getAllTargets,
   getTargetStatus,
   getTodayTargets,
+  updateTargetSchedule,
   updateTargetStatus,
 } from "../controllers/targets/targets.controllers";
 import {
@@ -34,6 +35,9 @@ router.post("/", createTarget);
 
 // Create daily challenge target
 router.post("/challenge", createChallengeTarget);
+
+// Update target schedule
+router.patch("/:id/schedule", updateTargetSchedule);
 
 // Update target status
 router.patch("/:id/status", updateTargetStatus);

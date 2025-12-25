@@ -3,9 +3,163 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTargetStatus = exports.getTodayTargets = exports.createTarget = void 0;
+exports.updateTargetStatus = exports.getTodayTargets = exports.createTarget = exports.getTargetStatus = exports.getAllTargets = void 0;
 const prismaconfig_1 = __importDefault(require("../../config/prismaconfig"));
 const xp_targets_1 = require("./xp.targets");
+/**
+ * GET ALL USER TARGETS
+ * GET /api/targets
+ * Optional query param: forTomorrow=true
+ */
+const getAllTargets = async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        const { forTomorrow } = req.query;
+        let start;
+        let end;
+        if (forTomorrow === 'true') {
+            // Tomorrow's targets (next day)
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+            start = tomorrow;
+            const tomorrowEnd = new Date(tomorrow);
+            tomorrowEnd.setHours(23, 59, 59, 999);
+            end = tomorrowEnd;
+        }
+        else {
+            // Today's targets
+            start = new Date();
+            start.setHours(0, 0, 0, 0);
+            end = new Date();
+            end.setHours(23, 59, 59, 999);
+        }
+        const targets = await prismaconfig_1.default.target.findMany({
+            where: {
+                userId,
+                startTime: {
+                    gte: start,
+                    lte: end,
+                },
+            },
+            select: {
+                id: true,
+                field: true,
+                subject: true,
+                title: true,
+                type: true,
+                plannedHours: true,
+                actualHours: true,
+                questions: true,
+                startTime: true,
+                endTime: true,
+                status: true,
+                carryForward: true,
+                dailyQuestion1: true,
+                dailyAnswer1: true,
+                dailyQuestion2: true,
+                dailyAnswer2: true,
+                responseDate: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+            orderBy: {
+                startTime: "asc",
+            },
+        });
+        // Transform to match frontend expected format
+        const transformedTargets = targets.map(target => ({
+            id: target.id,
+            name: target.title,
+            subject: target.subject,
+            target_type: target.type,
+            quantity: target.plannedHours || target.questions || 0,
+            quantity_type: target.plannedHours ? 'HOUR' : 'QUESTION',
+            start_time: target.startTime,
+            end_time: target.endTime,
+            progress: target.actualHours || 0,
+            completed: target.status === 'completed',
+            dailyTarget: {
+                progress: target.actualHours || 0,
+                completed: target.status === 'completed',
+            },
+            // Include raw target data for backend compatibility
+            field: target.field,
+            title: target.title,
+            type: target.type,
+            plannedHours: target.plannedHours,
+            actualHours: target.actualHours,
+            questions: target.questions,
+            status: target.status,
+            carryForward: target.carryForward,
+            dailyQuestion1: target.dailyQuestion1,
+            dailyAnswer1: target.dailyAnswer1,
+            dailyQuestion2: target.dailyQuestion2,
+            dailyAnswer2: target.dailyAnswer2,
+            responseDate: target.responseDate,
+        }));
+        return res.json({
+            message: "Targets retrieved successfully",
+            data: transformedTargets,
+        });
+    }
+    catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error fetching targets:", error);
+        return res.status(500).json({ message: "Failed to fetch targets" });
+    }
+};
+exports.getAllTargets = getAllTargets;
+/**
+ * GET TARGET STATUS (day completion)
+ * GET /api/targets/status
+ */
+const getTargetStatus = async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        const start = new Date();
+        start.setHours(0, 0, 0, 0);
+        const end = new Date();
+        end.setHours(23, 59, 59, 999);
+        // Get all today's targets
+        const targets = await prismaconfig_1.default.target.findMany({
+            where: {
+                userId,
+                startTime: {
+                    gte: start,
+                    lte: end,
+                },
+            },
+            select: {
+                status: true,
+            },
+        });
+        // Check if all targets are completed or missed
+        const isDayCompleted = targets.length > 0 && targets.every(target => target.status === 'completed' || target.status === 'missed');
+        return res.json({
+            message: "Target status retrieved successfully",
+            data: {
+                isDayCompleted,
+                totalTargets: targets.length,
+                completedTargets: targets.filter(t => t.status === 'completed').length,
+                missedTargets: targets.filter(t => t.status === 'missed').length,
+                pendingTargets: targets.filter(t => t.status === 'pending').length,
+            },
+        });
+    }
+    catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error fetching target status:", error);
+        return res.status(500).json({ message: "Failed to fetch target status" });
+    }
+};
+exports.getTargetStatus = getTargetStatus;
 /**
  * CREATE TARGET
  * POST /api/targets
@@ -105,6 +259,7 @@ const createTarget = async (req, res) => {
             id: target.id,
             status: target.status,
             message: "Target created successfully",
+            data: target,
         });
     }
     catch (error) {

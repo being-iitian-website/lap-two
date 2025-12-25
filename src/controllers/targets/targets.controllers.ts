@@ -25,6 +25,11 @@ interface UpdateStatusBody {
   actualHours?: number;
 }
 
+interface UpdateScheduleBody {
+  startTime: string;
+  endTime: string;
+}
+
 /**
  * GET ALL USER TARGETS
  * GET /api/targets
@@ -381,6 +386,76 @@ export const getTodayTargets = async (
     // eslint-disable-next-line no-console
     console.error("Error fetching today's targets:", error);
     return res.status(500).json({ message: "Failed to fetch today's targets" });
+  }
+};
+
+/**
+ * UPDATE TARGET SCHEDULE
+ * PATCH /api/targets/:id/schedule
+ */
+export const updateTargetSchedule = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const userId = req.user?.id as string;
+    const { id } = req.params as { id: string };
+    const { startTime, endTime } = req.body as UpdateScheduleBody;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    if (!startTime || !endTime) {
+      return res.status(400).json({ message: "Both startTime and endTime are required" });
+    }
+
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+
+    if (isNaN(start.getTime())) {
+      return res.status(400).json({ message: "Invalid date format for startTime" });
+    }
+
+    if (isNaN(end.getTime())) {
+      return res.status(400).json({ message: "Invalid date format for endTime" });
+    }
+
+    if (start >= end) {
+      return res.status(400).json({ message: "endTime must be after startTime" });
+    }
+
+    const target = await prisma.target.findFirst({
+      where: {
+        id,
+        userId,
+      },
+    });
+
+    if (!target) {
+      return res.status(404).json({ message: "Target not found or access denied" });
+    }
+
+    const updatedTarget = await prisma.target.update({
+      where: { id },
+      data: {
+        startTime: start,
+        endTime: end,
+      },
+    });
+
+    return res.json({
+      message: "Target schedule updated successfully",
+      target: {
+        id: updatedTarget.id,
+        startTime: updatedTarget.startTime,
+        endTime: updatedTarget.endTime,
+      },
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error updating target schedule:", error);
+    return res.status(500).json({ message: "Failed to update target schedule" });
   }
 };
 

@@ -287,6 +287,49 @@ Use this flow if you prefer Google sign-in instead of email/password. The backen
 
 ---
 
+## Step 5.1: Update Target Schedule
+
+Use this to change the start/end time without carrying the target forward.
+
+### Request
+- **Method**: `PATCH`
+- **URL**: `http://localhost:5000/api/targets/{target_id}/schedule`
+  Replace `{target_id}` with the actual target ID from Step 3.
+- **Headers**:
+  ```
+  Content-Type: application/json
+  Authorization: Bearer YOUR_JWT_TOKEN_HERE
+  ```
+- **Body** (raw JSON):
+  ```json
+  {
+    "startTime": "2025-01-20T10:00:00Z",
+    "endTime": "2025-01-20T11:00:00Z"
+  }
+  ```
+
+### Expected Response (200 OK)
+```json
+{
+  "message": "Target schedule updated successfully",
+  "target": {
+    "id": "uuid-string-here",
+    "startTime": "2025-01-20T10:00:00.000Z",
+    "endTime": "2025-01-20T11:00:00.000Z"
+  }
+}
+```
+
+### Test Cases:
+1. **Valid Request**: Should return 200 with updated start/end time
+2. **Missing Token**: Remove Authorization header → Should return 401 Unauthorized
+3. **Invalid Target ID**: Use non-existent ID → Should return 404 Target not found
+4. **Missing startTime or endTime**: Omit one field → Should return 400 Both startTime and endTime are required
+5. **Invalid Date Format**: Use invalid date → Should return 400 Invalid date format
+6. **endTime before startTime**: Provide endTime earlier than startTime → Should return 400 endTime must be after startTime
+
+---
+
 ## Step 6: Carry Forward Missed Target
 
 ### Request
@@ -571,6 +614,7 @@ or
 - [ ] Get today's targets
 - [ ] Update target status to "completed"
 - [ ] Update target status to "missed"
+- [ ] Update target schedule (start/end time)
 - [ ] Carry forward a missed target
 - [ ] Submit daily response for a target
 - [ ] Try submitting daily response twice on same day (should fail)
