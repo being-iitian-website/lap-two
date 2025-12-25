@@ -269,16 +269,9 @@ export const handleGoogleCallback = async (
 
     const token = generateToken(payload);
 
-    return res.json({
-      message: "Login successful",
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        image: (user as any).image,
-      },
-    });
+    return res.redirect(
+      `https://lap-one-blue.vercel.app/student/dashboard?token=${token}`
+    );
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);
