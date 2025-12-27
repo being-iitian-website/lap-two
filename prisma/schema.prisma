@@ -66,6 +66,7 @@ model User_info {
   wellness DailyWellness[]
   xpRecord      UserXP?
   dailyXPAwards DailyXPAward[]
+  dailyEfficiency DailyEfficiency[]
   notifications  Notification[]
   journalCredentials JournalCredential[]
 }
@@ -270,5 +271,31 @@ model JournalCredential {
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+// Daily efficiency tracking model
+model DailyEfficiency {
+  id                    String   @id @default(uuid())
+  userId                String
+  date                  DateTime // normalized to start of day
+  
+  // Daily metrics
+  totalTargets          Int      // Total targets scheduled for the day
+  completedTargets      Int      // Targets with status = 'completed'
+  missedTargets         Int      // Targets with status = 'missed'
+  pendingTargets        Int      // Targets with status = 'pending'
+  
+  // Efficiency calculation
+  completionRate        Float    // (completedTargets / totalTargets) * 100
+  timeEfficiency        Float    // (actualHours / plannedHours) * 100 for completed targets
+  overallEfficiency     Float    // weighted average of completion + time efficiency
+  
+  user                  User_info @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  @@unique([userId, date])
+  @@index([userId, date])
 }
 

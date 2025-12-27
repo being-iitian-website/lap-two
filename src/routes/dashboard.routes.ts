@@ -6,6 +6,12 @@ import {
   getDailyXPAwardsByDate,
   getTotalXP,
 } from "../controllers/dashboard/xpaward.controller";
+import {
+  getTodayEfficiency,
+  getWeekEfficiency,
+  getEfficiencyHistory,
+  recalculateEfficiency,
+} from "../controllers/dashboard/efficiency.controller";
 
 const router = Router();
 
@@ -20,6 +26,12 @@ router.get("/xp/daily", getDailyXPAwardsByDate);
 
 // Get total XP for user
 router.get("/xp/total", getTotalXP);
+
+// Efficiency tracking routes
+router.get("/efficiency/today", getTodayEfficiency);
+router.get("/efficiency/week", getWeekEfficiency);
+router.get("/efficiency/history", getEfficiencyHistory);
+router.post("/efficiency/recalculate", recalculateEfficiency);
 
 export default router;
 
